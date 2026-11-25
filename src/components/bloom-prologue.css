@@ -13,7 +13,7 @@
 }
 
 .prologue-phone-shot,
-.prologue-bouquet-reveal {
+.prologue-delivery {
   position: absolute;
   inset: 0;
 }
@@ -71,7 +71,7 @@
     33.7% 38.3%
   );
   transform-origin: 35.6% 36.3%;
-  transform: rotate(calc(5deg * var(--screen-tap, 0)));
+  transform: rotate(calc(5deg * var(--screen-tap, 0) + 4deg * var(--order-tap, 0)));
   opacity: calc(var(--phone-ui, 0.92) * (1 - var(--phone-zoom, 0)));
 }
 
@@ -291,7 +291,8 @@
   scale: calc(0.7 + 0.55 * var(--screen-tap, 0));
 }
 
-.prologue-product {
+.prologue-product,
+.prologue-confirmation {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -325,6 +326,56 @@
 }
 .prologue-product strong {
   font-size: 7cqw;
+}
+
+.prologue-order-button {
+  display: block;
+  width: 90%;
+  padding: 3.7cqw;
+  border-radius: 12cqw;
+  color: white;
+  background: #8a3e59;
+  box-shadow: 0 0 0 calc(var(--order-tap, 0) * 2cqw) #c98c9b6e;
+  scale: calc(1 - 0.07 * var(--order-tap, 0));
+}
+
+.prologue-confirmation {
+  opacity: var(--phone-confirmation, 0);
+  background: radial-gradient(ellipse at 50% 40%, #ffedcf, #fff6f0 71%);
+}
+
+.prologue-confirmation strong {
+  max-width: 67cqw;
+  font-family: Georgia, serif;
+  font-size: 11cqw;
+  line-height: 1.05;
+}
+
+.prologue-order-icon {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: end;
+  color: #9c4c68;
+  transform: translateY(calc(10cqw * (1 - var(--phone-confirmation, 0))));
+}
+
+.prologue-order-icon svg {
+  width: 14cqw;
+  height: 14cqw;
+}
+.prologue-order-icon svg + svg {
+  width: 6cqw;
+  height: 6cqw;
+  fill: #e59a9f;
+}
+.prologue-confirmation > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+}
+.prologue-confirmation > span:last-child svg {
+  width: 4cqw;
+  height: 4cqw;
 }
 
 .prologue-caption {
@@ -366,9 +417,9 @@
   line-height: 1.04;
 }
 
-.prologue-bouquet-reveal {
+.prologue-delivery {
   background: #fbe3cc;
-  opacity: var(--bouquet-reveal-shot, 0);
+  opacity: var(--delivery-shot, 0);
 }
 
 .prologue-entrance {
@@ -406,7 +457,60 @@
   transform: rotate(calc(2.3deg * var(--reaction-nod, 0)));
 }
 
-.prologue-held-bouquet {
+.prologue-parcel {
+  position: absolute;
+  left: 65%;
+  top: 62%;
+  width: 39%;
+  aspect-ratio: 1.8;
+  perspective: 420px;
+  opacity: calc(var(--parcel-arrival, 0) * (1 - var(--parcel-away, 0)));
+  transform: translate(
+      calc(-50% + 155% * (1 - var(--parcel-arrival, 0))),
+      calc(-24% + 51% * var(--parcel-away, 0))
+    )
+    rotate(calc(6deg * (1 - var(--parcel-arrival, 0))));
+}
+
+.prologue-parcel-front,
+.prologue-parcel-inside,
+.prologue-parcel-lid {
+  position: absolute;
+  inset: 0;
+}
+
+.prologue-parcel-front {
+  top: 26%;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c68b80;
+  border-radius: 0 0 7px 7px;
+  background: linear-gradient(165deg, #fde9dc, #e8b5ac);
+  box-shadow: 0 12px 34px #57253530;
+}
+
+.prologue-parcel-front .bloom-logo {
+  width: 86%;
+  height: 84%;
+  min-height: 0;
+  object-fit: contain;
+}
+.prologue-parcel-inside {
+  bottom: 62%;
+  background: #ac7968;
+}
+
+.prologue-parcel-lid {
+  bottom: 70%;
+  border: 1px solid #c58c84;
+  border-radius: 6px 6px 1px 1px;
+  background: linear-gradient(105deg, #fcecdf, #f1cbc0);
+  transform-origin: center top;
+  transform: rotateX(calc(105deg * var(--parcel-lid, 0)))
+    translateY(calc(-55% * var(--parcel-lid, 0)));
+}
+
+.prologue-delivered-bouquet {
   position: absolute;
   left: 55%;
   top: 71%;

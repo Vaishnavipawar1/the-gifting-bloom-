@@ -1,6 +1,6 @@
 # The Gifting Bloom
 
-A TanStack Start portfolio for handmade gifting. The app uses the project's existing Lovable Cloud authentication, PostgreSQL tables and Supabase storage policies.
+A Vite and React portfolio with React Router and Nitro for handmade gifting. The app uses the project's existing Lovable Cloud authentication, PostgreSQL tables and Supabase storage policies.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm test
 npm run build
 ```
 
-The default local address is http://localhost:5173. The Vite build emits the project's Nitro deployment output in `.output`. The built-in catalogue includes four labelled concept products.
+The default local address is http://localhost:5173. The Vite build emits Nitro deployment output in `.output` using the Cloudflare preset. Run `npm run dev` for the full app and its server endpoints. Set `NITRO_PRESET=node-server` at build time for a Node deployment. The built-in catalogue includes four labelled concept products.
 
 ## Connect the website in Lovable
 

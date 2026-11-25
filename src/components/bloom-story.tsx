@@ -13,7 +13,7 @@ import {
 import { ProductImage } from "./bloom-products";
 import { useBloom } from "./bloom-shell";
 import type { Playhead } from "./bloom-stage";
-import { Link } from "@tanstack/react-router";
+import { Link } from "./bloom-navigation";
 import { ease, gardenTimeAt, storyEnd } from "@/lib/bloom-timing";
 import { BloomPrologue, updatePrologue } from "./bloom-prologue";
 import "./bloom-prologue.css";

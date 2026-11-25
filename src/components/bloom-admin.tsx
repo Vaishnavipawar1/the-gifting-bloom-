@@ -1,4 +1,4 @@
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "./bloom-navigation";
 import { LogOut, Upload } from "lucide-react";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,7 @@ import {
   type AdminData,
 } from "@/lib/bloom-admin";
 import { instagram, jsonSetting, productOptions, type ProductOptions } from "@/lib/bloom";
+import { useBloom } from "./bloom-shell";
 import { PageHeading } from "./bloom-products";
 import { BloomLogo } from "./bloom-logo";
 
@@ -512,7 +513,7 @@ export function AdminDashboard() {
   const [section, setSection] = useState<(typeof sections)[number]>("Dashboard");
   const [failed, setFailed] = useState(false);
   const navigate = useNavigate();
-  const router = useRouter();
+  const { refreshStore } = useBloom();
   useEffect(() => {
     let alive = true;
     getAdmin()
@@ -535,8 +536,8 @@ export function AdminDashboard() {
   async function save(change: SaveData) {
     await saveAdmin({ data: change });
     setData(await getAdmin());
-    await router.options.context?.queryClient.invalidateQueries({ queryKey: ["bloom-store"] });
-    void router.invalidate();
+
+    await refreshStore();
   }
   if (!data)
     return (

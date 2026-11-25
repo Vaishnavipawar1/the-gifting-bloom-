@@ -30,4 +30,4 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## Project architecture
-- Keep this app on TanStack Start and Lovable Cloud; enforce admin access through server-verified roles stored separately from profile data, because the existing runtime and Cloud provide the supported app stack.
+- Keep the Vite and React frontend, Nitro server and Lovable Cloud integration. Enforce admin access through server-verified roles stored separately from profile data.

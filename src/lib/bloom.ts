@@ -135,20 +135,6 @@ export const whatsapp = (number: string | undefined, message: string) => {
     ? "https://wa.me/" + digits + "?text=" + encodeURIComponent(message)
     : undefined;
 };
-export const head = (title: string, description: string, path?: string, noIndex = false) => {
-  const full = title + " | The Gifting Bloom";
-  const origin = import.meta.env["VITE_SITE_URL"]?.replace(/\/+$/, "");
-  return {
-    meta: [
-      { title: full },
-      { name: "description", content: description },
-      { property: "og:title", content: full },
-      { property: "og:description", content: description },
-      ...(noIndex ? [{ name: "robots", content: "noindex, follow" }] : []),
-    ],
-    links: origin && path ? [{ rel: "canonical", href: origin + path }] : [],
-  };
-};
 export function describeCustom(item: Custom) {
   return [
     item.count + " " + item.flower + " stems",

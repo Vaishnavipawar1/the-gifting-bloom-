@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "./bloom-navigation";
 import { ArrowRight, Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { occasions, type Product } from "@/lib/bloom";

@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "./bloom-navigation";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, ArrowUpRight, Instagram, Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";

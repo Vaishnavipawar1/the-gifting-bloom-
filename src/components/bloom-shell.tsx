@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link } from "./bloom-navigation";
+import { useLocation } from "react-router";
 import { ArrowUpRight, Instagram, Menu, MessageCircle, Search } from "lucide-react";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -13,7 +14,9 @@ import { instagram, whatsapp } from "@/lib/bloom";
 import type { StoreData } from "@/lib/bloom-api";
 import { BloomLogo } from "./bloom-logo";
 
-const StoreContext = createContext<StoreData | null>(null);
+const StoreContext = createContext<(StoreData & { refreshStore: () => Promise<void> }) | null>(
+  null,
+);
 export function useBloom() {
   const store = useContext(StoreContext);
   if (!store) throw new Error("Store context is missing");
@@ -29,8 +32,16 @@ const links = [
   ["contact", "Contact"],
 ] as const;
 const activeSection = { exact: true, includeHash: true, includeSearch: false };
-export function BloomShell({ store, children }: { store: StoreData; children: ReactNode }) {
-  const path = useRouterState({ select: (state) => state.location.pathname });
+export function BloomShell({
+  store,
+  refreshStore,
+  children,
+}: {
+  store: StoreData;
+  refreshStore: () => Promise<void>;
+  children: ReactNode;
+}) {
+  const path = useLocation().pathname;
   const [menu, setMenu] = useState(false);
   const brand = store.settings["brand_name"] || "The Gifting Bloom";
   const social = store.settings["instagram"] || instagram;
@@ -40,7 +51,7 @@ export function BloomShell({ store, children }: { store: StoreData; children: Re
   );
 
   return (
-    <StoreContext.Provider value={store}>
+    <StoreContext.Provider value={{ ...store, refreshStore }}>
       <Toaster position="bottom-center" />
       {path !== "/" && !path.startsWith("/admin") && (
         <header className="bloom-nav bloom-nav-solid">

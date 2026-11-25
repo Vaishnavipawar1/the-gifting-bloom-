@@ -1,18 +1,28 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRouter, rootRouteId } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
+import { galleryRedirect, resolvePage } from "@/app";
+import type { StoreData } from "@/lib/bloom-api";
+import { samples } from "@/lib/bloom";
 
-import { routeTree } from "@/routeTree.gen";
+const catalogue: StoreData = {
+  products: samples,
+  categories: [],
+  settings: {},
+  reviews: [],
+  reels: [],
+  cloud: false,
+};
 
-// Match routes without running loaders or rendering: loaders may need a server or
-// network the test run lacks, and jsdom never loads the stylesheets React waits on.
 describe("App routing", () => {
-  it("matches a page for / instead of falling back to not found", () => {
-    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+  it("resolves the homepage and published gallery items", () => {
+    expect(resolvePage("/", catalogue).status).toBe(200);
+    expect(resolvePage("/product/pocketful-of-sun", catalogue).title).toBe("Pocketful of Sun");
+    expect(resolvePage("/admin", catalogue).noIndex).toBe(true);
+  });
 
-    const matches = router.matchRoutes("/");
-
-    expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
+  it("redirects the legacy gallery URL with its occasion filter", () => {
+    expect(galleryRedirect(new URL("https://example.com/shop?occasion=Just%20Because"))).toBe(
+      "/?occasion=Just+Because#collection",
+    );
   });
 
   it.each([
@@ -22,9 +32,5 @@ describe("App routing", () => {
     "/order-confirmation",
     "/shipping-policy",
     "/return-refund-policy",
-  ])("does not register the retired route %s", (path) => {
-    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
-
-    expect(router.matchRoutes(path).map(({ routeId }) => routeId)).not.toContain(path);
-  });
+  ])("returns not found for %s", (path) => expect(resolvePage(path, catalogue).status).toBe(404));
 });

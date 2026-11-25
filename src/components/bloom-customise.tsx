@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "./bloom-navigation";
 import { ArrowRight } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { colours, describeCustom, occasions, whatsapp, type Custom } from "@/lib/bloom";

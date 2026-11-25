@@ -1,7 +1,7 @@
 ﻿import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-export function publicCloud() {
+export function publicCloud(token?: string) {
   const url = process.env["SUPABASE_URL"] || import.meta.env["VITE_SUPABASE_URL"];
   const key =
     process.env["SUPABASE_PUBLISHABLE_KEY"] || import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
@@ -9,6 +9,7 @@ export function publicCloud() {
   return createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
       fetch: (input, init) => {
         const headers = new Headers(init?.headers);
         if (key.startsWith("sb_publishable_") && headers.get("authorization") === "Bearer " + key)
@@ -18,3 +19,5 @@ export function publicCloud() {
     },
   });
 }
+
+export type ReturnTypeOfCloud = ReturnType<typeof publicCloud>;

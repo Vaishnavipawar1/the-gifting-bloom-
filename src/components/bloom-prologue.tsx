@@ -1,4 +1,3 @@
-import { Check, Heart, PackageCheck } from "lucide-react";
 import type { Product } from "@/lib/bloom";
 import { ease } from "@/lib/bloom-timing";
 import actors from "@/assets/story-prologue-cast.webp";
@@ -8,10 +7,9 @@ import { ProductImage } from "./bloom-products";
 import { BloomLogo } from "./bloom-logo";
 
 export function updatePrologue(section: HTMLElement, time: number) {
-  const delivery = ease(time, 5.66, 6.15);
+  const reveal = ease(time, 5.66, 6.15);
   const detail = ease(time, 3.77, 4.04);
-  const confirmation = ease(time, 4.66, 4.93);
-  const lift = ease(time, 6.86, 7.53);
+  const lift = ease(time, 5.94, 6.77);
   const properties = {
     "prologue-end": ease(time, 7.9, 8.62),
     "phone-zoom": ease(time, 1.02, 2.47) * (1 - ease(time, 5.2, 5.94)),
@@ -20,17 +18,12 @@ export function updatePrologue(section: HTMLElement, time: number) {
     "profile-scroll": ease(time, 2.49, 3.5),
     "bouquet-focus": ease(time, 3.26, 3.69),
     "phone-profile": 1 - detail,
-    "phone-detail": detail * (1 - confirmation),
-    "phone-confirmation": confirmation,
+    "phone-detail": detail,
     "screen-tap": ease(time, 3.59, 3.76) * (1 - ease(time, 3.76, 3.98)),
-    "order-tap": ease(time, 4.37, 4.51) * (1 - ease(time, 4.51, 4.65)),
-    "delivery-shot": delivery,
-    "parcel-arrival": ease(time, 5.94, 6.45),
-    "parcel-lid": ease(time, 6.52, 7.02),
-    "parcel-away": ease(time, 7.12, 7.55),
+    "bouquet-reveal-shot": reveal,
     "gift-lift": lift,
     "reaction-nod": Math.sin(lift * Math.PI),
-    "gift-caption": ease(time, 7.1, 7.49) * (1 - ease(time, 7.86, 8.43)),
+    "gift-caption": ease(time, 6.4, 6.85) * (1 - ease(time, 7.86, 8.43)),
   };
   for (const [name, value] of Object.entries(properties)) {
     section.style.setProperty(`--${name}`, String(value));
@@ -98,17 +91,6 @@ function PhoneScreen({ logo, gifts, sunflower }: PreviewProps) {
           )}
           <strong>Sunflower Bouquet</strong>
           <span>That’s the one!</span>
-          <span className="prologue-order-button">Order Now</span>
-        </div>
-        <div className="prologue-phone-panel prologue-confirmation">
-          <span className="prologue-order-icon">
-            <PackageCheck />
-            <Heart />
-          </span>
-          <strong>Your Bloom Is On Its Way!</strong>
-          <span>
-            <Check /> Demo order confirmed
-          </span>
         </div>
       </div>
     </div>
@@ -132,22 +114,15 @@ export function BloomPrologue({ logo, gifts, sunflower }: PreviewProps) {
           <p>A little surprise. A beautiful smile. A memory forever.</p>
         </div>
       </div>
-      <div className="prologue-delivery">
+      <div className="prologue-bouquet-reveal">
         <img className="prologue-entrance" src={entrance} alt="" draggable={false} />
         <div className="prologue-receiving">
           <div className="prologue-actor prologue-smile">
             <img className="prologue-reaction-body" src={actors} alt="" draggable={false} />
             <img className="prologue-reaction-head" src={actors} alt="" draggable={false} />
           </div>
-          <div className="prologue-delivered-bouquet">
+          <div className="prologue-held-bouquet">
             <BouquetArt />
-          </div>
-          <div className="prologue-parcel" aria-hidden="true">
-            <div className="prologue-parcel-inside" />
-            <div className="prologue-parcel-lid" />
-            <div className="prologue-parcel-front">
-              <BloomLogo src={logo} />
-            </div>
           </div>
         </div>
         <div className="prologue-caption prologue-smile-caption">

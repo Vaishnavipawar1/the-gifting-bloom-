@@ -1,11 +1,11 @@
-﻿import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Heart, Search, ShoppingBag, SlidersHorizontal } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { occasions, type Product } from "@/lib/bloom";
 import { useBloom } from "./bloom-shell";
-import { PageHeading, ProductGrid, ProductImage, ProductPurchase } from "./bloom-products";
+import { PageHeading, ProductGrid, ProductImage, GiftDetails } from "./bloom-products";
 
-export function Shop({
+export function Gallery({
   category,
   initialOccasion = "",
   initialCategory = "",
@@ -16,7 +16,7 @@ export function Shop({
   initialCategory?: string;
   embedded?: boolean;
 }) {
-  const { products, cloud, categories, settings, cart } = useBloom();
+  const { products, cloud, categories, settings } = useBloom();
   const navigate = useNavigate();
   const currentCategory = categories.find(({ slug }) => slug === category);
   const categoryImage = currentCategory && settings["category-image:" + currentCategory.id];
@@ -24,8 +24,7 @@ export function Shop({
   const [localCategory, setLocalCategory] = useState("");
   const [colour, setColour] = useState("");
   const [localOccasion, setLocalOccasion] = useState(initialOccasion);
-  const [budget, setBudget] = useState("");
-  const [available, setAvailable] = useState(false);
+
   const [sort, setSort] = useState("");
   const filterCategory = embedded ? initialCategory : localCategory;
   const occasion = embedded ? initialOccasion : localOccasion;
@@ -59,30 +58,19 @@ export function Shop({
             field.toLowerCase().includes(search.trim().toLowerCase()),
           )) &&
         (!colour || item.colors.includes(colour)) &&
-        (!occasion || item.occasions.includes(occasion)) &&
-        (!budget || item.price_cents <= Number(budget) * 100) &&
-        (!available || item.stock_count > 0)
+        (!occasion || item.occasions.includes(occasion))
       );
     })
-    .sort((a, b) =>
-      sort === "low"
-        ? a.price_cents - b.price_cents
-        : sort === "high"
-          ? b.price_cents - a.price_cents
-          : sort === "name"
-            ? a.name.localeCompare(b.name)
-            : 0,
-    );
+    .sort((a, b) => (sort === "name" ? a.name.localeCompare(b.name) : 0));
   const reset = () => {
     setSearch("");
     updateFilters("", "");
     setColour("");
-    setBudget("");
-    setAvailable(false);
+
     setSort("");
   };
   const Container = embedded ? "section" : "main";
-  const bagCount = cart.reduce((count, item) => count + item.quantity, 0);
+
   return (
     <Container
       id={embedded ? "collection" : undefined}
@@ -115,7 +103,7 @@ export function Shop({
             aria-pressed={!filterCategory}
             onClick={() => updateFilters("", occasion)}
           >
-            Shop all
+            All gifts
           </button>
           <button
             type="button"
@@ -134,17 +122,16 @@ export function Shop({
           <Link to="/" hash="gift-finder" search={true}>
             Gift finder <ArrowRight size={15} />
           </Link>
-          <Link to="/wishlist">
-            <Heart size={15} /> Wishlist
-          </Link>
-          <Link to="/cart">
-            <ShoppingBag size={15} /> Bag{bagCount > 0 && " (" + bagCount + ")"}
-          </Link>
         </div>
       ) : (
         <div className="shop-tabs">
-          <Link to="/shop" search={{}} activeOptions={{ exact: true, includeSearch: false }}>
-            Shop all
+          <Link
+            to="/"
+            hash="collection"
+            search={{}}
+            activeOptions={{ exact: true, includeSearch: false }}
+          >
+            All gifts
           </Link>
           <Link to="/bouquets">Bouquets</Link>
           <Link to="/mini-gifts">Mini gifts</Link>
@@ -211,39 +198,19 @@ export function Shop({
             </select>
           </label>
           <label>
-            Max price
-            <select value={budget} onChange={(event) => setBudget(event.target.value)}>
-              <option value="">Any price</option>
-              {[250, 500, 750, 1000, 1500, 2500, 5000].map((value) => (
-                <option key={value} value={value}>
-                  ₹{value}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
             Sort by
             <select value={sort} onChange={(event) => setSort(event.target.value)}>
               <option value="">Featured</option>
-              <option value="low">Price, low to high</option>
-              <option value="high">Price, high to low</option>
+
               <option value="name">Name, A to Z</option>
             </select>
           </label>
         </div>
-        <label className="checkbox-label">
-          <input
-            type="checkbox"
-            checked={available}
-            onChange={(event) => setAvailable(event.target.checked)}
-          />{" "}
-          In stock only
-        </label>
       </div>
       {!cloud && (
         <p className="notice">
           {products.some(({ is_demo }) => is_demo)
-            ? "The live catalogue is unavailable. Sample gifts are labelled Demo."
+            ? "The live catalogue is unavailable. Sample designs are marked Illustration."
             : "The live catalogue is unavailable."}
         </p>
       )}
@@ -277,7 +244,10 @@ export function Detail({ product }: { product: Product }) {
   return (
     <main className="wrap inner-page">
       <p className="breadcrumb">
-        <Link to="/shop">Shop</Link> / {product.categoryName} / {product.name}
+        <Link to="/" hash="collection">
+          Gallery
+        </Link>{" "}
+        / {product.categoryName} / {product.name}
       </p>
       <div className="detail-layout">
         <div>
@@ -312,7 +282,7 @@ export function Detail({ product }: { product: Product }) {
         <div>
           <p className="eyebrow">{product.categoryName}</p>
           <h1>{product.name}</h1>
-          <ProductPurchase product={product} />
+          <GiftDetails product={product} />
         </div>
       </div>
       <section className="section-space">
@@ -342,45 +312,22 @@ export function Detail({ product }: { product: Product }) {
     </main>
   );
 }
-export function Wishlist() {
-  const { products, saved, ready } = useBloom();
-  const items = products.filter(({ id }) => saved.includes(id));
-  return (
-    <main className="wrap inner-page">
-      <PageHeading label="Saved for later" title="Your wishlist" />
-      {!ready ? (
-        <p role="status">Loading your saved blooms…</p>
-      ) : items.length ? (
-        <ProductGrid items={items} />
-      ) : (
-        <div className="empty">
-          <h2>Nothing saved yet.</h2>
-          <p>Tap the heart on any gift to keep it here.</p>
-          <Link to="/shop" className="btn btn-primary">
-            Find a bloom <ArrowRight size={16} />
-          </Link>
-        </div>
-      )}
-    </main>
-  );
-}
-
 export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
   const { products } = useBloom();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<[string, string, string, string]>(["", "", "", ""]);
+  const [answers, setAnswers] = useState<[string, string, string]>(["", "", ""]);
   const palette = [...new Set(products.flatMap(({ colors }) => colors))];
   const questions = [
     ["Who are you gifting?", ["Partner", "Friend", "Family", "Colleague", "Anyone"]],
     ["What’s the occasion?", [...occasions, "Any occasion"]],
-    ["What’s your budget?", ["₹500", "₹750", "₹1,000", "₹1,500", "Any budget"]],
+
     ["Which colours do they love?", [...palette, "Any colour"]],
   ] as const;
-  const limit = Number(answers[2].replace(/[^0-9]/g, "")) * 100;
+
   const rank = (item: Product) =>
     Number(item.occasions.includes(answers[1])) * 3 +
-    Number(item.colors.includes(answers[3])) * 2 +
+    Number(item.colors.includes(answers[2])) * 2 +
     Number(
       answers[0] === "Partner"
         ? item.category === "bouquets"
@@ -389,9 +336,7 @@ export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
   const matches = products
     .filter(
       (item) =>
-        item.stock_count > 0 &&
-        (!limit || item.price_cents <= limit) &&
-        (answers[3] === "Any colour" || item.colors.includes(answers[3])) &&
+        (answers[2] === "Any colour" || item.colors.includes(answers[2])) &&
         (answers[1] === "Any occasion" || item.occasions.includes(answers[1])),
     )
     .sort((a, b) => rank(b) - rank(a))
@@ -407,10 +352,10 @@ export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
         label="Gift finder"
         title="Find something that feels like them."
       />
-      {step < 4 ? (
+      {step < 3 ? (
         <div className="question-panel">
-          <p className="eyebrow">Question {step + 1} of 4</p>
-          <progress value={step + 1} max={4} aria-label="Gift finder progress" />
+          <p className="eyebrow">Question {step + 1} of 3</p>
+          <progress value={step + 1} max={3} aria-label="Gift finder progress" />
           <h2>{questions[step]![0]}</h2>
           <div className="choice-grid">
             {questions[step]![1].map((value) => (
@@ -441,7 +386,7 @@ export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
               disabled={!answers[step]}
               onClick={() => setStep(step + 1)}
             >
-              {step === 3 ? "See matches" : "Continue"} <ArrowRight size={16} />
+              {step === 2 ? "See matches" : "Continue"} <ArrowRight size={16} />
             </button>
           </div>
         </div>
@@ -451,7 +396,7 @@ export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
           {matches.length ? (
             <ProductGrid items={matches} embedded={embedded} />
           ) : (
-            <p>Try a different occasion, colour, or budget to see more gifts.</p>
+            <p>Try a different occasion or colour to see more gifts.</p>
           )}
           <div className="button-row section-space">
             <button className="btn btn-outline" onClick={() => setStep(0)}>
@@ -459,13 +404,9 @@ export function GiftFinder({ embedded = false }: { embedded?: boolean } = {}) {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() =>
-                void (embedded
-                  ? navigate({ to: "/", hash: "collection", search: {} })
-                  : navigate({ to: "/shop", search: {} }))
-              }
+              onClick={() => void navigate({ to: "/", hash: "collection", search: {} })}
             >
-              Browse all gifts
+              View the gallery
             </button>
           </div>
         </div>

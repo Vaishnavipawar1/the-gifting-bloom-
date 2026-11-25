@@ -1,27 +1,16 @@
-﻿import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { LogOut, Upload } from "lucide-react";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  customStates,
   enquiryStates,
   getAdmin,
-  orderStates,
   ownerSession,
-  paymentStates,
   saveAdmin,
   uploadBloomMedia,
   type AdminData,
 } from "@/lib/bloom-admin";
-import {
-  defaultPricing,
-  instagram,
-  jsonSetting,
-  money,
-  pricingSchema,
-  productOptions,
-  type ProductOptions,
-} from "@/lib/bloom";
+import { instagram, jsonSetting, productOptions, type ProductOptions } from "@/lib/bloom";
 import { PageHeading } from "./bloom-products";
 import { BloomLogo } from "./bloom-logo";
 
@@ -91,7 +80,6 @@ export function AdminLogin() {
 type SaveData = Parameters<typeof saveAdmin>[0]["data"];
 const text = (form: FormData, name: string) => String(form.get(name) ?? "").trim();
 const number = (form: FormData, name: string) => Number(text(form, name));
-const amount = (form: FormData, name: string) => Math.round(number(form, name) * 100);
 const list = (form: FormData, name: string) => [
   ...new Set(
     text(form, name)
@@ -121,7 +109,7 @@ function Input({
         type={type}
         defaultValue={value ?? ""}
         required={required}
-        {...(type === "number" ? { min: 0, step: name.endsWith("_amount") ? "0.01" : 1 } : {})}
+        {...(type === "number" ? { min: 0, step: 1 } : {})}
       />
     </label>
   );
@@ -169,7 +157,7 @@ function Status({
 }) {
   return (
     <label>
-      {name === "status" ? "Status" : "Payment status"}
+      Status
       <select name={name} defaultValue={value}>
         {options.map((option) => (
           <option value={option} key={option}>
@@ -331,8 +319,7 @@ const blankProduct = {
   name: "",
   slug: "",
   description: "",
-  price_cents: 0,
-  stock_count: 0,
+
   colors: [] as string[],
   category_id: null as string | null,
   image_url: "",
@@ -355,7 +342,7 @@ function ProductEditor({
   const p = row ?? blankProduct;
   return (
     <Editor
-      title={row?.name || "Add product"}
+      title={row?.name || "Add gallery item"}
       save={save}
       remove={row ? { kind: "delete", table: "products", id: row.id } : undefined}
       build={(form) => ({
@@ -365,8 +352,7 @@ function ProductEditor({
           name: text(form, "name"),
           slug: text(form, "slug"),
           description: text(form, "description"),
-          price_cents: amount(form, "price_amount"),
-          stock_count: number(form, "stock"),
+
           colors: list(form, "colors"),
           category_id: text(form, "category") || null,
           image_url: text(form, "image"),
@@ -380,7 +366,7 @@ function ProductEditor({
           video: text(form, "video"),
           occasions: list(form, "occasions"),
           variants: list(form, "variants"),
-          dispatch: text(form, "dispatch"),
+
           seo: text(form, "seo"),
         },
       })}
@@ -388,8 +374,7 @@ function ProductEditor({
       <div className="admin-fields">
         <Input name="name" label="Product name" value={p.name} required />
         <Input name="slug" label="Slug (lowercase, hyphen-separated)" value={p.slug} required />
-        <Input name="price_amount" label="Price in ₹" type="number" value={p.price_cents / 100} />
-        <Input name="stock" label="Stock count" type="number" value={p.stock_count} />
+
         <label>
           Category
           <select name="category" defaultValue={p.category_id || ""}>
@@ -413,7 +398,6 @@ function ProductEditor({
           label="Occasions (comma-separated)"
           value={meta.occasions.join(", ")}
         />
-        <Input name="dispatch" label="Dispatch text" value={meta.dispatch} />
       </div>
       <TextArea name="description" label="Product description" value={p.description} />
       <Input name="seo" label="SEO description" value={meta.seo} />
@@ -451,10 +435,9 @@ function SettingEditor({
     instagram: "Instagram URL",
     hero_heading: "Opening story headline",
     collection_heading: "Collection headline",
-    shop_cta: "Shop button",
+
     custom_cta: "Customise button",
     story_title: "Story headline",
-    dispatch: "Default dispatch text",
   };
   const media = {
     logo: "Logo",
@@ -466,14 +449,13 @@ function SettingEditor({
     brand_story: "Brand story",
     founder_story: "Founder story",
     policy_privacy: "Privacy policy",
-    policy_shipping: "Shipping policy",
-    policy_terms: "Terms and conditions",
-    policy_returns: "Return and refund policy",
+
+    policy_site_terms: "Terms and conditions",
   };
-  const prices = jsonSetting(config["pricing"], pricingSchema.parse, defaultPricing);
+
   return (
     <Editor
-      title="Store content, contact and pricing"
+      title="Website content and contact"
       startOpen
       save={save}
       build={(form) => ({
@@ -486,14 +468,6 @@ function SettingEditor({
             ]),
           ) as Record<keyof typeof fields | keyof typeof media | keyof typeof paragraphs, string>),
           hide_demo: form.has("hide_demo") ? "true" : "false",
-        },
-        pricing: {
-          rose: amount(form, "rose_amount"),
-          daisy: amount(form, "daisy_amount"),
-          sunflower: amount(form, "sunflower_amount"),
-          classic: amount(form, "classic_amount"),
-          grand: amount(form, "grand_amount"),
-          packaging: amount(form, "packaging_amount"),
         },
       })}
     >
@@ -520,34 +494,18 @@ function SettingEditor({
       <Flag name="hide_demo" initial={config["hide_demo"] === "true"}>
         Hide built-in demo catalogue
       </Flag>
-      <h3>Bouquet builder pricing</h3>
-      <div className="admin-fields">
-        {Object.entries(prices).map(([key, price]) => (
-          <Input
-            key={key}
-            label={key + " (₹)"}
-            name={key + "_amount"}
-            value={price / 100}
-            type="number"
-            required
-          />
-        ))}
-      </div>
     </Editor>
   );
 }
 const sections = [
   "Dashboard",
-  "Products",
+  "Gallery",
   "Categories",
-  "Orders",
-  "Inventory",
-  "Custom orders",
+
   "Enquiries",
   "Reels & media",
   "Testimonials",
-  "Store settings",
-  "Reports",
+  "Website settings",
 ] as const;
 export function AdminDashboard() {
   const [data, setData] = useState<AdminData>();
@@ -597,25 +555,13 @@ export function AdminDashboard() {
       </main>
     );
   const config = Object.fromEntries(data.settings.map(({ key, value }) => [key, value]));
-  const paid = data.orders.filter(
-    ({ payment_status, status }) => payment_status === "paid" && status !== "cancelled",
-  );
-  const month = new Date().toISOString().slice(0, 7);
-  const monthly = paid
-    .filter(({ created_at }) => created_at.startsWith(month))
-    .reduce((sum, order) => sum + order.total_cents, 0);
-  const low = data.products.filter(({ active, stock_count }) => active && stock_count <= 5);
-  const productRows =
-    section === "Inventory"
-      ? data.products.slice().sort((a, b) => a.stock_count - b.stock_count)
-      : data.products;
   return (
     <main className="wrap admin-shell">
       <div className="section-heading">
         <PageHeading label="The Gifting Bloom" title="Owner dashboard" />
         <div className="button-row">
           <Link className="btn btn-outline" to="/">
-            View storefront
+            View website
           </Link>
           <button
             className="btn btn-outline"
@@ -647,10 +593,9 @@ export function AdminDashboard() {
           <>
             <div className="admin-stats">
               {[
-                [data.products.length, "Products"],
-                [data.orders.length, "Order requests"],
-                [data.orders.filter(({ status }) => status === "new").length, "Awaiting review"],
-                [money(monthly), "This month’s paid orders"],
+                [data.products.length, "Gallery items"],
+                [data.enquiries.length, "Enquiries"],
+                [data.enquiries.filter(({ status }) => status === "new").length, "New enquiries"],
               ].map(([value, label]) => (
                 <div className="panel" key={label}>
                   <strong>{value}</strong>
@@ -659,18 +604,6 @@ export function AdminDashboard() {
               ))}
             </div>
             <div className="admin-fields section-space">
-              <div className="panel">
-                <h3>Low stock</h3>
-                {low.length ? (
-                  low.map((item) => (
-                    <p key={item.id}>
-                      {item["name"]} · {item.stock_count}
-                    </p>
-                  ))
-                ) : (
-                  <p>No active products have five units or fewer.</p>
-                )}
-              </div>
               <div className="panel">
                 <h3>Recent enquiries</h3>
                 {data.enquiries.length ? (
@@ -686,16 +619,14 @@ export function AdminDashboard() {
             </div>
           </>
         )}
-        {(section === "Products" || section === "Inventory") && (
+        {section === "Gallery" && (
           <>
-            {section === "Products" && (
-              <ProductEditor
-                categories={data.categories}
-                meta={productOptions.parse({})}
-                save={save}
-              />
-            )}
-            {productRows.map((row) => (
+            <ProductEditor
+              categories={data.categories}
+              meta={productOptions.parse({})}
+              save={save}
+            />
+            {data.products.map((row) => (
               <ProductEditor
                 key={row.id}
                 row={row}
@@ -708,7 +639,6 @@ export function AdminDashboard() {
                 save={save}
               />
             ))}
-            {section === "Inventory" && !productRows.length && <p>Add products to track stock.</p>}
           </>
         )}
         {section === "Categories" &&
@@ -748,50 +678,6 @@ export function AdminDashboard() {
               </Flag>
             </Editor>
           ))}
-        {section === "Orders" &&
-          (data.orders.length ? (
-            data.orders.map((row) => (
-              <Editor
-                key={row.id}
-                title={row.order_reference + " · " + row.customer_name + " · " + row.status}
-                save={save}
-                build={(form) => ({
-                  kind: "order",
-                  id: row.id,
-                  status: text(form, "status") as (typeof orderStates)[number],
-                  payment_status: text(form, "payment_status") as (typeof paymentStates)[number],
-                })}
-              >
-                <p>
-                  {row.customer_name} · {row.email} · {row.phone}
-                </p>
-                <p>
-                  {row.address}, {row.postal_code}
-                </p>
-                {row.gift_message && <p>Gift note — {row.gift_message}</p>}
-                {row.delivery_instructions && (
-                  <p>Delivery instructions — {row.delivery_instructions}</p>
-                )}
-                {Array.isArray(row.items) &&
-                  row.items.map(
-                    (item, index) =>
-                      typeof item === "object" &&
-                      item &&
-                      !Array.isArray(item) && (
-                        <p key={index}>
-                          {String(item["quantity"] ?? "")} × {String(item["name"] ?? "")}{" "}
-                          {item["description"] ? "· " + item["description"] : ""}
-                        </p>
-                      ),
-                  )}
-                <p>Subtotal {money(row.subtotal_cents)}</p>
-                <Status value={row.status} options={orderStates} />
-                <Status name="payment_status" value={row.payment_status} options={paymentStates} />
-              </Editor>
-            ))
-          ) : (
-            <p>No order requests yet.</p>
-          ))}
         {section === "Enquiries" &&
           (data.enquiries.length ? (
             data.enquiries.map((row) => (
@@ -814,55 +700,6 @@ export function AdminDashboard() {
             ))
           ) : (
             <p>No enquiries yet.</p>
-          ))}
-        {section === "Custom orders" &&
-          (data.customOrders.length ? (
-            data.customOrders.map((row) => (
-              <Editor
-                key={row.id}
-                title={row.customer_name + " · " + row.status}
-                save={save}
-                build={(form) => ({
-                  kind: "custom",
-                  id: row.id,
-                  status: text(form, "status") as (typeof customStates)[number],
-                  quotation_cents: text(form, "quote_amount") ? amount(form, "quote_amount") : null,
-                })}
-              >
-                <p>
-                  {row.email} · {row.phone}
-                </p>
-                {row.requirements &&
-                  typeof row.requirements === "object" &&
-                  !Array.isArray(row.requirements) && (
-                    <dl>
-                      {Object.entries(row.requirements).map(([key, value]) => (
-                        <div key={key}>
-                          <dt>{key}</dt>
-                          <dd>
-                            {Array.isArray(value)
-                              ? value.join(", ")
-                              : typeof value === "boolean"
-                                ? value
-                                  ? "Yes"
-                                  : "No"
-                                : String(value ?? "")}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                <Input
-                  name="quote_amount"
-                  label="Quotation in ₹"
-                  type="number"
-                  value={row.quotation_cents === null ? "" : row.quotation_cents / 100}
-                />
-                <Status value={row.status} options={customStates} />
-              </Editor>
-            ))
-          ) : (
-            <p>No custom enquiries yet.</p>
           ))}
         {section === "Reels & media" &&
           [undefined, ...data.reels].map((row) => (
@@ -953,34 +790,7 @@ export function AdminDashboard() {
               </Flag>
             </Editor>
           ))}
-        {section === "Store settings" && <SettingEditor config={config} save={save} />}
-        {section === "Reports" && (
-          <div className="admin-fields">
-            <div className="panel">
-              <h3>Sales</h3>
-              <p>{paid.length} paid orders</p>
-              <p>
-                {money(paid.reduce((sum, row) => sum + row.total_cents, 0))} recorded paid revenue
-              </p>
-              {orderStates.map((status) => (
-                <p key={status}>
-                  {status.replaceAll("_", " ")} ·{" "}
-                  {data.orders.filter((row) => row.status === status).length}
-                </p>
-              ))}
-            </div>
-            <div className="panel">
-              <h3>Inventory</h3>
-              <p>{data.products.reduce((total, row) => total + row.stock_count, 0)} listed units</p>
-              <p>{low.length} low-stock products</p>
-              {low.map((row) => (
-                <p key={row.id}>
-                  {row.name} · {row.stock_count}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
+        {section === "Website settings" && <SettingEditor config={config} save={save} />}
       </section>
     </main>
   );

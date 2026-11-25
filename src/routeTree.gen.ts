@@ -12,21 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BloomDiariesRouteImport } from './routes/bloom-diaries'
 import { Route as BouquetsRouteImport } from './routes/bouquets'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CustomiseRouteImport } from './routes/customise'
 import { Route as GiftFinderRouteImport } from './routes/gift-finder'
 import { Route as MiniGiftsRouteImport } from './routes/mini-gifts'
-import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
-import { Route as ReturnRefundPolicyRouteImport } from './routes/return-refund-policy'
-import { Route as ShippingPolicyRouteImport } from './routes/shipping-policy'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsConditionsRouteImport } from './routes/terms-conditions'
-import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
@@ -44,16 +38,6 @@ const BloomDiariesRoute = BloomDiariesRouteImport.update({
 const BouquetsRoute = BouquetsRouteImport.update({
   id: '/bouquets',
   path: '/bouquets',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -76,11 +60,6 @@ const MiniGiftsRoute = MiniGiftsRouteImport.update({
   path: '/mini-gifts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrderConfirmationRoute = OrderConfirmationRouteImport.update({
-  id: '/order-confirmation',
-  path: '/order-confirmation',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const OurStoryRoute = OurStoryRouteImport.update({
   id: '/our-story',
   path: '/our-story',
@@ -89,16 +68,6 @@ const OurStoryRoute = OurStoryRouteImport.update({
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReturnRefundPolicyRoute = ReturnRefundPolicyRouteImport.update({
-  id: '/return-refund-policy',
-  path: '/return-refund-policy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShippingPolicyRoute = ShippingPolicyRouteImport.update({
-  id: '/shipping-policy',
-  path: '/shipping-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopRoute = ShopRouteImport.update({
@@ -114,11 +83,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const TermsConditionsRoute = TermsConditionsRouteImport.update({
   id: '/terms-conditions',
   path: '/terms-conditions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WishlistRoute = WishlistRouteImport.update({
-  id: '/wishlist',
-  path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -141,21 +105,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bloom-diaries': typeof BloomDiariesRoute
   '/bouquets': typeof BouquetsRoute
-  '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/customise': typeof CustomiseRoute
   '/gift-finder': typeof GiftFinderRoute
   '/mini-gifts': typeof MiniGiftsRoute
-  '/order-confirmation': typeof OrderConfirmationRoute
   '/our-story': typeof OurStoryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/return-refund-policy': typeof ReturnRefundPolicyRoute
-  '/shipping-policy': typeof ShippingPolicyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-conditions': typeof TermsConditionsRoute
-  '/wishlist': typeof WishlistRoute
   '/admin/login': typeof AdminLoginRoute
   '/product/$slug': typeof ProductSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -164,21 +122,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bloom-diaries': typeof BloomDiariesRoute
   '/bouquets': typeof BouquetsRoute
-  '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/customise': typeof CustomiseRoute
   '/gift-finder': typeof GiftFinderRoute
   '/mini-gifts': typeof MiniGiftsRoute
-  '/order-confirmation': typeof OrderConfirmationRoute
   '/our-story': typeof OurStoryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/return-refund-policy': typeof ReturnRefundPolicyRoute
-  '/shipping-policy': typeof ShippingPolicyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-conditions': typeof TermsConditionsRoute
-  '/wishlist': typeof WishlistRoute
   '/admin/login': typeof AdminLoginRoute
   '/product/$slug': typeof ProductSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -188,21 +140,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bloom-diaries': typeof BloomDiariesRoute
   '/bouquets': typeof BouquetsRoute
-  '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/customise': typeof CustomiseRoute
   '/gift-finder': typeof GiftFinderRoute
   '/mini-gifts': typeof MiniGiftsRoute
-  '/order-confirmation': typeof OrderConfirmationRoute
   '/our-story': typeof OurStoryRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
-  '/return-refund-policy': typeof ReturnRefundPolicyRoute
-  '/shipping-policy': typeof ShippingPolicyRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-conditions': typeof TermsConditionsRoute
-  '/wishlist': typeof WishlistRoute
   '/admin/login': typeof AdminLoginRoute
   '/product/$slug': typeof ProductSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -213,21 +159,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bloom-diaries'
     | '/bouquets'
-    | '/cart'
-    | '/checkout'
     | '/contact'
     | '/customise'
     | '/gift-finder'
     | '/mini-gifts'
-    | '/order-confirmation'
     | '/our-story'
     | '/privacy-policy'
-    | '/return-refund-policy'
-    | '/shipping-policy'
     | '/shop'
     | '/sitemap.xml'
     | '/terms-conditions'
-    | '/wishlist'
     | '/admin/login'
     | '/product/$slug'
     | '/admin/'
@@ -236,21 +176,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bloom-diaries'
     | '/bouquets'
-    | '/cart'
-    | '/checkout'
     | '/contact'
     | '/customise'
     | '/gift-finder'
     | '/mini-gifts'
-    | '/order-confirmation'
     | '/our-story'
     | '/privacy-policy'
-    | '/return-refund-policy'
-    | '/shipping-policy'
     | '/shop'
     | '/sitemap.xml'
     | '/terms-conditions'
-    | '/wishlist'
     | '/admin/login'
     | '/product/$slug'
     | '/admin'
@@ -259,21 +193,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bloom-diaries'
     | '/bouquets'
-    | '/cart'
-    | '/checkout'
     | '/contact'
     | '/customise'
     | '/gift-finder'
     | '/mini-gifts'
-    | '/order-confirmation'
     | '/our-story'
     | '/privacy-policy'
-    | '/return-refund-policy'
-    | '/shipping-policy'
     | '/shop'
     | '/sitemap.xml'
     | '/terms-conditions'
-    | '/wishlist'
     | '/admin/login'
     | '/product/$slug'
     | '/admin/'
@@ -283,21 +211,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BloomDiariesRoute: typeof BloomDiariesRoute
   BouquetsRoute: typeof BouquetsRoute
-  CartRoute: typeof CartRoute
-  CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   CustomiseRoute: typeof CustomiseRoute
   GiftFinderRoute: typeof GiftFinderRoute
   MiniGiftsRoute: typeof MiniGiftsRoute
-  OrderConfirmationRoute: typeof OrderConfirmationRoute
   OurStoryRoute: typeof OurStoryRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
-  ReturnRefundPolicyRoute: typeof ReturnRefundPolicyRoute
-  ShippingPolicyRoute: typeof ShippingPolicyRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsConditionsRoute: typeof TermsConditionsRoute
-  WishlistRoute: typeof WishlistRoute
   AdminLoginRoute: typeof AdminLoginRoute
   ProductSlugRoute: typeof ProductSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -324,20 +246,6 @@ declare module '@tanstack/react-router' {
       path: '/bouquets'
       fullPath: '/bouquets'
       preLoaderRoute: typeof BouquetsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -368,13 +276,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MiniGiftsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/order-confirmation': {
-      id: '/order-confirmation'
-      path: '/order-confirmation'
-      fullPath: '/order-confirmation'
-      preLoaderRoute: typeof OrderConfirmationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/our-story': {
       id: '/our-story'
       path: '/our-story'
@@ -387,20 +288,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof PrivacyPolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/return-refund-policy': {
-      id: '/return-refund-policy'
-      path: '/return-refund-policy'
-      fullPath: '/return-refund-policy'
-      preLoaderRoute: typeof ReturnRefundPolicyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shipping-policy': {
-      id: '/shipping-policy'
-      path: '/shipping-policy'
-      fullPath: '/shipping-policy'
-      preLoaderRoute: typeof ShippingPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop': {
@@ -422,13 +309,6 @@ declare module '@tanstack/react-router' {
       path: '/terms-conditions'
       fullPath: '/terms-conditions'
       preLoaderRoute: typeof TermsConditionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/wishlist': {
-      id: '/wishlist'
-      path: '/wishlist'
-      fullPath: '/wishlist'
-      preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -459,21 +339,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BloomDiariesRoute: BloomDiariesRoute,
   BouquetsRoute: BouquetsRoute,
-  CartRoute: CartRoute,
-  CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   CustomiseRoute: CustomiseRoute,
   GiftFinderRoute: GiftFinderRoute,
   MiniGiftsRoute: MiniGiftsRoute,
-  OrderConfirmationRoute: OrderConfirmationRoute,
   OurStoryRoute: OurStoryRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
-  ReturnRefundPolicyRoute: ReturnRefundPolicyRoute,
-  ShippingPolicyRoute: ShippingPolicyRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsConditionsRoute: TermsConditionsRoute,
-  WishlistRoute: WishlistRoute,
   AdminLoginRoute: AdminLoginRoute,
   ProductSlugRoute: ProductSlugRoute,
   AdminIndexRoute: AdminIndexRoute,

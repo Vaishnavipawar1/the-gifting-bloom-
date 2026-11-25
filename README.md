@@ -1,6 +1,6 @@
 # The Gifting Bloom
 
-A TanStack Start storefront for handmade gifting. The app uses the project's existing Lovable Cloud authentication, PostgreSQL tables and Supabase storage policies.
+A TanStack Start portfolio for handmade gifting. The app uses the project's existing Lovable Cloud authentication, PostgreSQL tables and Supabase storage policies.
 
 ## Run locally
 
@@ -13,9 +13,9 @@ npm test
 npm run build
 ```
 
-The default local address is http://localhost:5173. The Vite build emits the project's Nitro deployment output in `.output`. The built-in catalogue includes four labelled concept products and a demo checkout that collects no personal details.
+The default local address is http://localhost:5173. The Vite build emits the project's Nitro deployment output in `.output`. The built-in catalogue includes four labelled concept products.
 
-## Connect the storefront in Lovable
+## Connect the website in Lovable
 
 Use the [existing Lovable project](https://lovable.dev/projects/c0cdfc67-dd09-491e-8bf9-363169801842) for database policies, storage, environment variables, owner access and publishing.
 
@@ -23,14 +23,11 @@ Use the [existing Lovable project](https://lovable.dev/projects/c0cdfc67-dd09-49
 - Configure `VITE_SITE_URL` with the public origin before the production build to add canonical links.
 - The owner signs in at `/admin/login`. Create their account in Lovable Cloud and assign the `admin` role for its user ID in `user_roles`. The app verifies this role on the server before every dashboard read, write or upload.
 - Repair the anonymous catalogue, category, testimonial and reel SELECT policies in Lovable Cloud. Public reads currently return `42501 permission denied for function has_role`. Apply public policies for active or approved rows and authenticated staff policies for private rows, then verify each role.
-- Configure the `bloom-media` bucket in Lovable Cloud. The storefront needs public reads of published media and uploads restricted to owners. The current bucket lookup could not find it.
-- For production order intake, restrict untrusted direct writes and apply managed rate limits. The app's order handler validates variants and recalculates totals from Cloud data. The existing public INSERT policy allows direct pending-order inserts independently of that handler. Coordinate the server insert credentials or a trusted database function and the policy changes together.
+- Configure the `bloom-media` bucket in Lovable Cloud. The website needs public reads of published media and uploads restricted to owners. The current bucket lookup could not find it.
 
-## Prepare the shop
+## Prepare the gallery
 
-In the dashboard, create the `bouquets` and `mini-gifts` categories and add verified products, photos and stock. Reels accept a link from the official account and an optional uploaded video. Publish customer reviews only with permission. The store settings include logo, founder story, banner, policies, bouquet pricing and the WhatsApp number with country code. The official Instagram profile could not be verified during development, so sample products and visuals are labelled Demo and the owner dashboard supports manual import.
-
-Checkout records unpaid order requests and can hand off to WhatsApp when configured. The owner confirms delivery charges and payment separately. Production payments, shipping tracking, materials inventory, coupon data and custom-order attachments require additional Cloud configuration. The checkout performs a stock check but does not reserve stock. The owner manages stock counts in the dashboard as orders are accepted.
+Use the owner dashboard to manage gallery items, photos, categories, Instagram Reels, testimonials, and enquiry status. The bouquet builder lets visitors preview a design and send it through the same enquiry form. Upload approved media and set the logo, profile and contact details in Website settings.
 
 ## Demo photography
 

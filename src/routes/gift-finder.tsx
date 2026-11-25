@@ -1,5 +1,5 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
-import { GiftFinder } from "@/components/bloom-shop";
+import { createFileRoute } from "@tanstack/react-router";
+import { GiftFinder } from "@/components/bloom-gallery";
 import { head } from "@/lib/bloom";
 export const Route = createFileRoute("/gift-finder")({
   head: () =>

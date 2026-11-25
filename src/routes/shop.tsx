@@ -1,19 +1,10 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
-import { Shop } from "@/components/bloom-shop";
-import { head } from "@/lib/bloom";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
 export const Route = createFileRoute("/shop")({
-  validateSearch: (search: Record<string, unknown>): { occasion?: string | undefined } => ({
-    occasion: typeof search["occasion"] === "string" ? search["occasion"] : undefined,
+  validateSearch: (search: Record<string, unknown>): { occasion?: string } => ({
+    ...(typeof search["occasion"] === "string" ? { occasion: search["occasion"] } : {}),
   }),
-  head: () =>
-    head(
-      "Shop handmade gifts",
-      "Find a handmade bouquet or floral gift by colour, occasion and budget.",
-      "/shop",
-    ),
-  component: ShopPage,
+  beforeLoad: ({ search }) => {
+    throw redirect({ to: "/", hash: "collection", search, statusCode: 301 });
+  },
 });
-function ShopPage() {
-  const { occasion } = Route.useSearch();
-  return <Shop key={occasion ?? ""} initialOccasion={occasion} />;
-}

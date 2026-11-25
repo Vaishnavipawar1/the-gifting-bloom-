@@ -1,7 +1,7 @@
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { pricingSchema, productOptions } from "./bloom";
+import { productOptions } from "./bloom";
 
 const ownerOnly = createMiddleware({ type: "function" })
   .middleware([requireSupabaseAuth])
@@ -21,58 +21,44 @@ export const ownerSession = createServerFn({ method: "GET" })
 export const getAdmin = createServerFn({ method: "GET" })
   .middleware([ownerOnly])
   .handler(async ({ context: { supabase: db } }) => {
-    const [products, categories, orders, enquiries, customOrders, reels, reviews, settings] =
-      await Promise.all([
-        db.from("products").select("*").order("sort_order").order("name"),
-        db.from("product_categories").select("*").order("sort_order"),
-        db.from("orders").select("*").order("created_at", { ascending: false }),
-        db.from("contact_enquiries").select("*").order("created_at", { ascending: false }),
-        db.from("custom_orders").select("*").order("created_at", { ascending: false }),
-        db.from("media_reels").select("*").order("sort_order"),
-        db.from("testimonials").select("*").order("created_at", { ascending: false }),
-        db.from("website_settings").select("*").order("key"),
-      ]);
+    const [products, categories, enquiries, reels, reviews, settings] = await Promise.all([
+      db
+        .from("products")
+        .select(
+          "id,name,slug,description,colors,category_id,image_url,image_alt,is_demo,active,sort_order",
+        )
+        .order("sort_order")
+        .order("name"),
+      db.from("product_categories").select("*").order("sort_order"),
+
+      db.from("contact_enquiries").select("*").order("created_at", { ascending: false }),
+
+      db.from("media_reels").select("*").order("sort_order"),
+      db.from("testimonials").select("*").order("created_at", { ascending: false }),
+      db.from("website_settings").select("*").order("key"),
+    ]);
     if (
       products.error ||
       categories.error ||
-      orders.error ||
       enquiries.error ||
-      customOrders.error ||
       reels.error ||
       reviews.error ||
       settings.error
     )
-      throw new Error("The shop dashboard could not be loaded.");
+      throw new Error("The owner dashboard could not be loaded.");
     return {
       products: products.data,
       categories: categories.data,
-      orders: orders.data,
+
       enquiries: enquiries.data,
-      customOrders: customOrders.data,
+
       reels: reels.data,
       reviews: reviews.data,
       settings: settings.data,
     };
   });
 export type AdminData = Awaited<ReturnType<typeof getAdmin>>;
-export const orderStates = [
-  "new",
-  "confirmed",
-  "in_production",
-  "shipped",
-  "delivered",
-  "cancelled",
-] as const;
-export const paymentStates = ["unpaid", "pending", "paid", "refunded"] as const;
 export const enquiryStates = ["new", "in_progress", "resolved"] as const;
-export const customStates = [
-  "new",
-  "quoted",
-  "accepted",
-  "in_production",
-  "completed",
-  "cancelled",
-] as const;
 const id = z.uuid();
 const slug = z
   .string()
@@ -84,7 +70,7 @@ const instagramUrl = z
   .url()
   .refine((value) => /^https:\/\/(?:www\.)?instagram\.com\//i.test(value));
 const sort_order = z.number().int().min(0).max(99999);
-const cents = z.number().int().min(0).max(100000000);
+
 const settingsShape = {
   brand_name: z.string().trim().min(2).max(100),
   tagline: z.string().max(160),
@@ -97,17 +83,16 @@ const settingsShape = {
   banner_image: casualUrl,
   hero_heading: z.string().max(150),
   collection_heading: z.string().max(100),
-  shop_cta: z.string().max(50),
+
   custom_cta: z.string().max(50),
   brand_story: z.string().max(4000),
   story_title: z.string().max(160),
   founder_story: z.string().max(4000),
-  dispatch: z.string().max(160),
+
   hide_demo: z.enum(["true", "false"]),
   policy_privacy: z.string().max(12000),
-  policy_shipping: z.string().max(12000),
-  policy_returns: z.string().max(12000),
-  policy_terms: z.string().max(12000),
+
+  policy_site_terms: z.string().max(12000),
 };
 const action = z.discriminatedUnion("kind", [
   z.object({
@@ -117,8 +102,7 @@ const action = z.discriminatedUnion("kind", [
       name: z.string().trim().min(2).max(140),
       slug,
       description: z.string().max(5000),
-      price_cents: cents,
-      stock_count: z.number().int().min(0).max(999999),
+
       colors: z.array(z.string().max(80)).max(20),
       category_id: id.nullable(),
       image_url: mediaUrl,
@@ -143,19 +127,7 @@ const action = z.discriminatedUnion("kind", [
     }),
     image: casualUrl,
   }),
-  z.object({
-    kind: z.literal("order"),
-    id,
-    status: z.enum(orderStates),
-    payment_status: z.enum(paymentStates),
-  }),
   z.object({ kind: z.literal("enquiry"), id, status: z.enum(enquiryStates) }),
-  z.object({
-    kind: z.literal("custom"),
-    id,
-    status: z.enum(customStates),
-    quotation_cents: cents.nullable(),
-  }),
   z.object({
     kind: z.literal("reel"),
     id: id.optional(),
@@ -183,7 +155,6 @@ const action = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("settings"),
     settings: z.object(settingsShape),
-    pricing: pricingSchema,
   }),
   z.object({
     kind: z.literal("delete"),
@@ -211,10 +182,11 @@ export const saveAdmin = createServerFn({ method: "POST" })
             .from("website_settings")
             .upsert({ key: "product:" + key, value: JSON.stringify(data.meta) }),
         );
+        const row = { ...data.row, updated_at: new Date().toISOString() };
         check(
-          await db
-            .from("products")
-            .upsert({ id: key, ...data.row, updated_at: new Date().toISOString() }),
+          data.id
+            ? await db.from("products").update(row).eq("id", key)
+            : await db.from("products").insert({ id: key, ...row }),
         );
         break;
       }
@@ -228,25 +200,8 @@ export const saveAdmin = createServerFn({ method: "POST" })
         check(await db.from("product_categories").upsert({ id: key, ...data.row }));
         break;
       }
-      case "order": {
-        check(
-          await db
-            .from("orders")
-            .update({ status: data.status, payment_status: data.payment_status })
-            .eq("id", data.id),
-        );
-        break;
-      }
       case "enquiry":
         check(await db.from("contact_enquiries").update({ status: data.status }).eq("id", data.id));
-        break;
-      case "custom":
-        check(
-          await db
-            .from("custom_orders")
-            .update({ status: data.status, quotation_cents: data.quotation_cents })
-            .eq("id", data.id),
-        );
         break;
       case "reel": {
         const key = data.id || crypto.randomUUID();
@@ -265,11 +220,7 @@ export const saveAdmin = createServerFn({ method: "POST" })
         check(
           await db
             .from("website_settings")
-            .upsert(
-              Object.entries({ ...data.settings, pricing: JSON.stringify(data.pricing) }).map(
-                ([key, value]) => ({ key, value }),
-              ),
-            ),
+            .upsert(Object.entries(data.settings).map(([key, value]) => ({ key, value }))),
         );
         break;
       case "delete": {

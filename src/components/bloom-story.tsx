@@ -1,4 +1,4 @@
-﻿import { ChevronsDown, SkipForward } from "lucide-react";
+import { ChevronsDown, SkipForward } from "lucide-react";
 import {
   Component,
   useCallback,
@@ -260,9 +260,9 @@ export function BloomStory() {
     skippedBeforePin.current = true;
     setDisabled(true);
     requestAnimationFrame(() => {
-      const shop = document.getElementById("shop-the-blooms");
-      shop?.scrollIntoView();
-      shop?.focus({ preventScroll: true });
+      const gallery = document.getElementById("gift-gallery");
+      gallery?.scrollIntoView();
+      gallery?.focus({ preventScroll: true });
     });
   }
 
@@ -283,8 +283,8 @@ export function BloomStory() {
       <BloomPrologue logo={settings["logo"]} gifts={previewGifts} sunflower={sunflower} />
       <a
         className="intro-skip"
-        href="#shop-the-blooms"
-        aria-label="Skip animation and enter the shop"
+        href="#gift-gallery"
+        aria-label="Skip animation and explore the gallery"
         onClick={skipBeforePin}
       >
         <SkipForward size={19} aria-hidden="true" />
@@ -310,14 +310,14 @@ export function BloomStory() {
       </div>
 
       <p className="story-love-caption">And Just Like That… A Love Story Begins.</p>
-      <div className="story-shop-reveal">
+      <div className="story-gallery-reveal">
         <p>Every Love Story Deserves a Bloom.</p>
         <div>
           <Link to="/" hash="collection" search={{ category: "bouquets" }}>
             Explore Our Bouquets
           </Link>
           <Link to="/" hash="collection" search={{}}>
-            Shop All Gifts
+            Explore the Gallery
           </Link>
           <Link to="/" hash="customise" search={true}>
             Customise Your Gift

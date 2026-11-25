@@ -1,5 +1,5 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
-import { Customise } from "@/components/bloom-order";
+import { createFileRoute } from "@tanstack/react-router";
+import { Customise } from "@/components/bloom-customise";
 import { head } from "@/lib/bloom";
 export const Route = createFileRoute("/customise")({
   head: () =>

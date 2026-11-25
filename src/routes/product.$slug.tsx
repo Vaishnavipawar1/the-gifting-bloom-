@@ -1,5 +1,5 @@
-﻿import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Detail } from "@/components/bloom-shop";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Detail } from "@/components/bloom-gallery";
 import { head } from "@/lib/bloom";
 import { storeQuery } from "@/lib/bloom-api";
 export const Route = createFileRoute("/product/$slug")({
@@ -16,18 +16,10 @@ export const Route = createFileRoute("/product/$slug")({
     const main = head(item.name, description, "/product/" + item.slug, item.is_demo);
     const schema = {
       "@context": "https://schema.org",
-      "@type": "Product",
+      "@type": "CreativeWork",
       name: item.name,
       description,
       image: item.image_url || undefined,
-      offers: {
-        "@type": "Offer",
-        price: (item.price_cents / 100).toFixed(2),
-        priceCurrency: "INR",
-        availability: item.stock_count
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
-      },
     };
     return {
       ...main,

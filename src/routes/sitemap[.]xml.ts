@@ -1,4 +1,4 @@
-﻿import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { getStore } from "@/lib/bloom-api";
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const { products } = await getStore();
         const paths = [
           "/",
-          "/shop",
+
           "/bouquets",
           "/mini-gifts",
           "/customise",
@@ -19,8 +19,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           "/contact",
           "/privacy-policy",
           "/terms-conditions",
-          "/shipping-policy",
-          "/return-refund-policy",
+
           ...products
             .filter(({ is_demo }) => !is_demo)
             .map(({ slug }) => "/product/" + encodeURIComponent(slug)),

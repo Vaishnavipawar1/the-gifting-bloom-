@@ -25,8 +25,8 @@ function NotFoundComponent() {
         <p className="eyebrow">404</p>
         <h1>This bloom has moved.</h1>
         <p>Find another handmade gift in the collection.</p>
-        <Link className="btn btn-primary" to="/shop">
-          Explore the shop <ArrowRight size={16} />
+        <Link className="btn btn-primary" to="/" hash="collection">
+          Explore the gallery <ArrowRight size={16} />
         </Link>
       </div>
     </main>

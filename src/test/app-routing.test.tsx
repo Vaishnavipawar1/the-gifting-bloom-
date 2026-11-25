@@ -14,4 +14,17 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it.each([
+    "/cart",
+    "/checkout",
+    "/wishlist",
+    "/order-confirmation",
+    "/shipping-policy",
+    "/return-refund-policy",
+  ])("does not register the retired route %s", (path) => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    expect(router.matchRoutes(path).map(({ routeId }) => routeId)).not.toContain(path);
+  });
 });

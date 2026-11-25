@@ -1,13 +1,7 @@
-﻿import type { Tables } from "@/integrations/supabase/types";
+import type { Tables } from "@/integrations/supabase/types";
 import { z } from "zod";
 
 export const instagram = "https://www.instagram.com/the_gifting_bloom11/";
-export const money = (cents: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: cents % 100 ? 2 : 0,
-  }).format(cents / 100);
 export const colours = {
   Rose: "#b84d69",
   Blush: "#e7a0b4",
@@ -33,19 +27,25 @@ export const productOptions = z.object({
   video: z.union([z.url(), z.literal("")]).default(""),
   occasions: z.array(z.string().max(80)).max(12).default([]),
   variants: z.array(z.string().max(80)).max(12).default([]),
-  dispatch: z.string().max(160).default(""),
+
   seo: z.string().max(160).default(""),
 });
 export type ProductOptions = z.infer<typeof productOptions>;
 export type Product = Omit<
   Tables<"products">,
-  "created_at" | "updated_at" | "category_id" | "active" | "sort_order"
+  | "created_at"
+  | "updated_at"
+  | "category_id"
+  | "active"
+  | "sort_order"
+  | "price_cents"
+  | "stock_count"
 > &
   ProductOptions & { category: string; categoryName: string };
 const demoProduct = (
   slug: string,
   name: string,
-  price_cents: number,
+
   category: keyof typeof categoryNames,
   colors: string[],
   description: string,
@@ -54,12 +54,12 @@ const demoProduct = (
   id: slug,
   slug,
   name,
-  price_cents,
+
   category,
   categoryName: categoryNames[category],
   colors,
   description,
-  stock_count: 12,
+
   image_url: "/blooms/" + slug + ".jpg",
   image_alt: name + " concept image",
   is_demo: true,
@@ -69,7 +69,7 @@ export const samples = [
   demoProduct(
     "blush-keepsake",
     "The Blush Keepsake",
-    89900,
+
     "bouquets",
     ["Blush", "Ivory", "Rose"],
     "Soft chenille roses gathered in cream paper and finished with a rose-pink ribbon.",
@@ -78,7 +78,7 @@ export const samples = [
   demoProduct(
     "pocketful-of-sun",
     "Pocketful of Sun",
-    74900,
+
     "bouquets",
     ["Gold", "Sage"],
     "A bundle of sunny chenille stems in warm kraft wrap for days that deserve a little brightness.",
@@ -87,7 +87,7 @@ export const samples = [
   demoProduct(
     "lavender-letter",
     "The Lavender Letter",
-    54900,
+
     "bouquets",
     ["Lavender", "Ivory"],
     "A petite posy of lavender and cream daisies, finished with a matching ribbon.",
@@ -96,29 +96,13 @@ export const samples = [
   demoProduct(
     "little-bloom-charm",
     "Little Bloom Charm",
-    24900,
+
     "mini-gifts",
     ["Blush", "Lavender"],
     "A small fuzzy daisy on a gold-tone keyring to carry a little bloom wherever you go.",
     [occasions[1], occasions[3], occasions[7]],
   ),
 ];
-export const defaultPricing = {
-  rose: 18000,
-  daisy: 12000,
-  sunflower: 16000,
-  classic: 10000,
-  grand: 22000,
-  packaging: 12000,
-};
-export const pricingSchema = z.object({
-  rose: z.number().int().min(1).max(1000000),
-  daisy: z.number().int().min(1).max(1000000),
-  sunflower: z.number().int().min(1).max(1000000),
-  classic: z.number().int().min(0).max(1000000),
-  grand: z.number().int().min(0).max(1000000),
-  packaging: z.number().int().min(0).max(1000000),
-});
 export const customSchema = z.object({
   flower: z.enum(["rose", "daisy", "sunflower"]),
   count: z.number().int().min(1).max(24),
@@ -134,10 +118,6 @@ export const customSchema = z.object({
   packaging: z.boolean(),
 });
 export type Custom = z.infer<typeof customSchema>;
-export const quote = (item: Custom, price = defaultPricing) =>
-  price[item.flower] * item.count +
-  (item.size === "petite" ? 0 : price[item.size]) +
-  (item.packaging ? price.packaging : 0);
 export function jsonSetting<T>(
   value: string | undefined,
   parse: (input: unknown) => T,

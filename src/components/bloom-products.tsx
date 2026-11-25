@@ -1,9 +1,14 @@
-﻿import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Flower2, Heart, ShoppingBag } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ArrowRight, Flower2 } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { colours, money, whatsapp, type Product } from "@/lib/bloom";
-import { useBloom, type CartLine } from "./bloom-shell";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { colours, type Product } from "@/lib/bloom";
 
 export function ProductImage({
   src,
@@ -63,145 +68,28 @@ export function Swatches({
   );
 }
 
-function productLine(
-  product: Product,
-  quantity = 1,
-  colour = product.colors[0] || "",
-  variant = product.variants[0] || "",
-  note = "",
-): Extract<CartLine, { kind: "product" }> {
-  return {
-    key: JSON.stringify([product.id, colour, variant, note]),
-    name: product.name,
-    kind: "product",
-    id: product.id,
-    slug: product.slug,
-    colour,
-    variant,
-    note,
-    quantity,
-    image: product.image_url,
-    unit: product.price_cents,
-    demo: product.is_demo,
-    max: product.stock_count,
-  };
-}
-
-export function ProductPurchase({
+export function GiftDetails({
   product,
-  compact = false,
-  embedded = false,
+  inDialog = false,
 }: {
   product: Product;
-  compact?: boolean;
-  embedded?: boolean;
+  inDialog?: boolean;
 }) {
-  const [colour, setColour] = useState(product.colors[0] || "");
-  const [variant, setVariant] = useState(product.variants[0] || "");
-  const [quantity, setQuantity] = useState(1);
-  const [note, setNote] = useState("");
-  const store = useBloom();
-  const navigate = useNavigate();
-  const line = productLine(product, quantity, colour, variant, note.trim());
-  const remaining = store.remaining(line);
-  const chat = whatsapp(
-    store.settings["whatsapp"],
-    "Hi! I would like to ask about " + product.name + (colour ? " in " + colour : "") + ".",
+  const contact = (
+    <Link className="text-link" to="/" hash="contact" search={true}>
+      Ask about this gift <ArrowRight size={16} />
+    </Link>
   );
   return (
-    <div className="purchase">
-      {product.is_demo && <span className="pill">Demo listing</span>}
-      <p className="product-price">{money(product.price_cents)}</p>
+    <div className="gift-details">
+      {product.is_demo && <span className="pill">Illustration</span>}
       <p>{product.description}</p>
-      {!!product.colors.length && (
-        <div>
-          Colour <strong>{colour}</strong>
-          <Swatches values={product.colors} selected={colour} onSelect={setColour} />
-        </div>
-      )}
-      {!!product.variants.length && (
-        <label>
-          Variant
-          <select value={variant} onChange={(event) => setVariant(event.target.value)}>
-            {product.variants.map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
-        </label>
-      )}
-      <p className="fine">
-        {product.stock_count
-          ? product.dispatch ||
-            store.settings["dispatch"] ||
-            "Dispatch timing is confirmed when the order is accepted."
-          : "Currently out of stock"}
-      </p>
-      {!compact && (
-        <label>
-          Personalisation{" "}
-          <input
-            maxLength={500}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            placeholder="Add a name or a short note"
-          />
-        </label>
-      )}
-      <div className="button-row">
-        <label className="quantity-field">
-          Qty{" "}
-          <input
-            type="number"
-            min={1}
-            max={Math.max(1, Math.min(remaining, 50))}
-            value={quantity}
-            onChange={(event) =>
-              setQuantity(
-                Math.max(
-                  1,
-                  Math.min(Number(event.target.value) || 1, Math.max(1, Math.min(50, remaining))),
-                ),
-              )
-            }
-          />
-        </label>
-        <button
-          className="btn btn-primary"
-          disabled={!store.ready || quantity > remaining}
-          onClick={() => store.add(line)}
-        >
-          <ShoppingBag size={17} /> Add to bag
-        </button>
-        {!compact && (
-          <button
-            className="btn btn-outline"
-            disabled={!store.ready || quantity > remaining}
-            onClick={() => {
-              if (store.add(line)) void navigate({ to: "/checkout" });
-            }}
-          >
-            Buy now
-          </button>
-        )}
-      </div>
-      {!compact && (
-        <div className="button-row">
-          {!embedded && (
-            <Link to="/customise" className="text-link">
-              Customise a bouquet <ArrowRight size={16} />
-            </Link>
-          )}
-          {chat && !product.is_demo && (
-            <a className="text-link" href={chat} target="_blank" rel="noreferrer">
-              Ask on WhatsApp
-            </a>
-          )}
-        </div>
-      )}
+      {!!product.colors.length && <Swatches values={product.colors} />}
+      {!!product.variants.length && <p>Styles: {product.variants.join(", ")}</p>}
+      {inDialog ? <DialogClose asChild>{contact}</DialogClose> : contact}
     </div>
   );
 }
-
 export function ProductPreview({
   product,
   embedded = false,
@@ -242,7 +130,7 @@ export function ProductPreview({
             />
           )}
         </div>
-        <ProductPurchase product={product} compact={!embedded} embedded={embedded} />
+        <GiftDetails product={product} inDialog />
       </div>
     </DialogContent>
   );
@@ -255,9 +143,6 @@ export function ProductCard({
   product: Product;
   embedded?: boolean;
 }) {
-  const store = useBloom();
-  const active = store.saved.includes(product.id);
-  const line = productLine(product);
   return (
     <Dialog>
       <article className="product-card">
@@ -277,27 +162,7 @@ export function ProductCard({
               <ProductImage src={product.image_url} alt={product.image_alt || product.name} />
             </Link>
           )}
-          {product.is_demo && <span className="pill demo-pill">Demo</span>}
-          <button
-            className="icon-button card-heart"
-            aria-label={"Save " + product.name}
-            aria-pressed={active}
-            onClick={() => store.toggle(product.id)}
-          >
-            <Heart size={19} fill={active ? "currentColor" : "none"} />
-          </button>
-          <button
-            className="icon-button card-add"
-            aria-label={
-              "Add " +
-              [product.name, line.colour, line.variant].filter(Boolean).join(", ") +
-              " to your bag"
-            }
-            disabled={!store.ready || !store.remaining(line)}
-            onClick={() => store.add(line)}
-          >
-            <ShoppingBag size={17} />
-          </button>
+          {product.is_demo && <span className="pill demo-pill">Illustration</span>}
         </div>
         <div className="product-info">
           <div className="product-title">
@@ -310,7 +175,6 @@ export function ProductCard({
                 </Link>
               )}
             </h3>
-            <strong>{money(product.price_cents)}</strong>
           </div>
           <Swatches values={product.colors} />
           <div className="product-actions">

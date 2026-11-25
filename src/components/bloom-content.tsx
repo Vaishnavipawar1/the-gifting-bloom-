@@ -1,4 +1,4 @@
-﻿import { Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, ArrowUpRight, Instagram, Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -8,8 +8,8 @@ import couple from "@/assets/story-couple-optimized.jpg";
 import { useBloom } from "./bloom-shell";
 import { PageHeading, ProductImage, ProductPreview } from "./bloom-products";
 import { BloomStory } from "./bloom-story";
-import { GiftFinder, Shop } from "./bloom-shop";
-import { Customise } from "./bloom-order";
+import { GiftFinder, Gallery } from "./bloom-gallery";
+import { Customise } from "./bloom-customise";
 import { BloomLogo } from "./bloom-logo";
 
 const feelings = [
@@ -26,11 +26,11 @@ export function Home({ occasion, category }: { occasion: string; category: strin
   return (
     <main className="single-page" id="home">
       <BloomStory />
-      <section className="wrap home-section" id="shop-the-blooms" tabIndex={-1}>
+      <section className="wrap home-section" id="gift-gallery" tabIndex={-1}>
         <div className="section-heading">
           <div>
             <p className="eyebrow">For the people you love</p>
-            <h2>Shop by feeling.</h2>
+            <h2>Gifts for every feeling.</h2>
           </div>
           <Link className="text-link" to="/" hash="gift-finder" search={true}>
             Take the gift finder <ArrowRight size={17} />
@@ -55,14 +55,14 @@ export function Home({ occasion, category }: { occasion: string; category: strin
                   {label}
                   <ArrowUpRight size={17} />
                 </span>
-                {product?.is_demo && <small>Demo imagery</small>}
+                {product?.is_demo && <small>Concept illustration</small>}
               </Link>
             );
           })}
         </div>
       </section>
       <div className="collection-section">
-        <Shop initialOccasion={occasion} initialCategory={category} embedded />
+        <Gallery initialOccasion={occasion} initialCategory={category} embedded />
       </div>
       <GiftFinder embedded />
       <div className="collection-section">
@@ -178,14 +178,14 @@ function ReelGrid({ embedded = false }: { embedded?: boolean } = {}) {
                   <Dialog>
                     <DialogTrigger asChild>
                       <button type="button" className="text-link">
-                        Shop this bloom <ArrowRight size={15} />
+                        View this bloom <ArrowRight size={15} />
                       </button>
                     </DialogTrigger>
                     <ProductPreview product={product} embedded />
                   </Dialog>
                 ) : (
                   <Link className="text-link" to="/product/$slug" params={{ slug: product.slug }}>
-                    Shop this bloom <ArrowRight size={15} />
+                    View this bloom <ArrowRight size={15} />
                   </Link>
                 ))}
               <a className="text-link" href={reel.post_url} target="_blank" rel="noreferrer">
@@ -265,7 +265,7 @@ export function OurStory({ embedded = false }: { embedded?: boolean } = {}) {
           </article>
           <article>
             <h3>Give a little joy</h3>
-            <p>Choose a delivery address and confirm the details with the shop.</p>
+            <p>Browse the gallery for inspiration or share your design idea with us.</p>
           </article>
         </div>
       </section>
@@ -297,9 +297,7 @@ export function Contact({ embedded = false }: { embedded?: boolean } = {}) {
       });
       setSent(true);
     } catch {
-      setError(
-        "Your enquiry couldn’t be saved. Please try again or message the shop on Instagram.",
-      );
+      setError("Your enquiry couldn’t be saved. Please try again or message us on Instagram.");
     } finally {
       setPending(false);
     }
@@ -311,7 +309,7 @@ export function Contact({ embedded = false }: { embedded?: boolean } = {}) {
       className={embedded ? "wrap home-section" : "wrap inner-page"}
     >
       <PageHeading as={embedded ? "h2" : "h1"} label="Contact" title="Let’s talk blooms.">
-        Ask about an existing order, a personalised bouquet, or a gift you have in mind.
+        Ask about our handmade gifts or share an idea for a personalised bouquet.
       </PageHeading>
       <div className="split-page">
         <div className="panel">
@@ -343,7 +341,7 @@ export function Contact({ embedded = false }: { embedded?: boolean } = {}) {
                 What’s it about?
                 <select name="subject">
                   <option>General enquiry</option>
-                  <option>Order enquiry</option>
+                  <option>Gift enquiry</option>
                   <option>Custom gift enquiry</option>
                 </select>
               </label>
@@ -395,17 +393,6 @@ export function Contact({ embedded = false }: { embedded?: boolean } = {}) {
               to choose your stems, colours, and packaging.
             </p>
           </details>
-          <details>
-            <summary>When will my order ship?</summary>
-            <p>
-              {settings["dispatch"] ||
-                "The shop confirms dispatch timing when it accepts your request."}
-            </p>
-          </details>
-          <details>
-            <summary>How do I ask about an order?</summary>
-            <p>Include the order reference from your confirmation when you send an enquiry.</p>
-          </details>
         </aside>
       </div>
     </Container>
@@ -415,19 +402,11 @@ export function Contact({ embedded = false }: { embedded?: boolean } = {}) {
 const policies = {
   privacy: [
     "Privacy Policy",
-    "The shop uses the contact and delivery details you submit to respond to enquiries and fulfil accepted orders. Your bag and wishlist are saved in this browser. If you choose to continue on WhatsApp or Instagram, those services handle your activity under their own privacy policies.",
+    "We use the contact details you submit to respond to your enquiry. WhatsApp and Instagram handle messages under their own privacy policies.",
   ],
   terms: [
     "Terms & Conditions",
-    "Prices are shown in Indian rupees. Submitting an order creates a request. The shop confirms availability, delivery charges, timing, and payment arrangements before accepting it. Demo listings are a preview of the shopping experience.",
-  ],
-  shipping: [
-    "Shipping Policy",
-    "Enter the recipient’s address and PIN code when requesting an order. The shop confirms delivery coverage, charges, and dispatch timing when it reviews your request. For a date-sensitive gift, contact the shop before ordering.",
-  ],
-  returns: [
-    "Return & Refund Policy",
-    "If a gift arrives damaged or differs from your accepted order, contact the shop with your order reference and details so it can review the issue. Ask the shop to confirm cancellation, return, and refund terms before ordering a personalised gift.",
+    "This website presents handmade gift designs. Please respect our original photos and illustrations, and contact us with any questions.",
   ],
 } as const;
 export function Policy({ type }: { type: keyof typeof policies }) {
@@ -437,9 +416,11 @@ export function Policy({ type }: { type: keyof typeof policies }) {
     <main className="wrap inner-page">
       <PageHeading label="Customer care" title={title} />
       <div className="panel policy">
-        <p className="preserve-lines">{settings["policy_" + type] || fallback}</p>
+        <p className="preserve-lines">
+          {settings[type === "privacy" ? "policy_privacy" : "policy_site_terms"] || fallback}
+        </p>
         <Link to="/contact" className="text-link">
-          Contact the shop <ArrowRight size={16} />
+          Get in touch <ArrowRight size={16} />
         </Link>
       </div>
     </main>

@@ -240,20 +240,6 @@ body {
 .nav-actions {
   gap: 1px;
 }
-.bag-icon span {
-  display: grid;
-  place-items: center;
-  padding-inline: 4px;
-  min-width: 17px;
-  height: 17px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  border-radius: 20px;
-  color: white;
-  font-size: 0.65rem;
-  background: var(--rose);
-}
 .mobile-menu {
   display: none;
 }
@@ -424,7 +410,7 @@ body:has(.bloom-story[data-opening="true"]) .floating-chat {
 }
 .single-page
   :is(
-    #shop-the-blooms,
+    #gift-gallery,
     #filters,
     #collection,
     #gift-finder,
@@ -561,26 +547,6 @@ body:has(.bloom-story[data-opening="true"]) .floating-chat {
   top: 12px;
   left: 12px;
 }
-.card-heart {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: #fffaf2ed;
-}
-.card-heart[aria-pressed="true"] svg {
-  animation: heart-pop 0.26s ease-out;
-}
-.card-add {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: #fffaf2ed;
-}
-@keyframes heart-pop {
-  50% {
-    transform: scale(1.3);
-  }
-}
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .home-section .product-card {
@@ -607,10 +573,6 @@ body:has(.bloom-story[data-opening="true"]) .floating-chat {
   align-items: baseline;
   gap: 8px;
   flex-wrap: wrap;
-}
-.product-title strong {
-  color: var(--rose);
-  font-size: 0.85rem;
 }
 .product-actions {
   border-top: 1px solid var(--rule);
@@ -1084,34 +1046,19 @@ input[type="checkbox"] {
   height: 100%;
   object-fit: cover;
 }
-.purchase {
+.gift-details {
   display: grid;
   align-content: start;
   gap: 13px;
   margin-top: 15px;
 }
-.purchase .swatches {
+.gift-details .swatches {
   margin-top: 8px;
-}
-.purchase .product-price {
-  margin: 0;
-}
-.product-price {
-  color: var(--rose);
-  font: 700 2.05rem/1.1 var(--display);
 }
 .product-video {
   width: 100%;
   max-height: 430px;
   margin-top: 13px;
-}
-.quantity-field {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.quantity-field input[type="number"] {
-  width: 65px;
 }
 .quick-view {
   max-width: min(92vw, 760px);
@@ -1131,9 +1078,6 @@ input[type="checkbox"] {
   grid-template-columns: 1.1fr 0.9fr;
   gap: clamp(15px, 4vw, 50px);
   align-items: start;
-}
-.checkout-layout {
-  grid-template-columns: 1.5fr 1fr;
 }
 .panel h2 {
   font-size: clamp(1.9rem, 3.2vw, 3.1rem);
@@ -1262,38 +1206,6 @@ progress {
   left: 41.5%;
   clip-path: polygon(0 0, 50% 34%, 100% 0, 93% 100%, 51% 57%, 5% 100%);
 }
-.cart-lines {
-  display: grid;
-  gap: 10px;
-}
-.cart-line {
-  display: grid;
-  grid-template-columns: 81px minmax(0, 1fr) auto;
-  align-items: start;
-  gap: 12px;
-  padding: 13px;
-  border: 1px solid var(--rule);
-  background: #fff8f4;
-  border-radius: 16px;
-}
-.cart-thumb {
-  overflow: hidden;
-  border-radius: 11px;
-  aspect-ratio: 1;
-}
-.cart-thumb img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-.cart-line .quantity-button {
-  min-height: 35px;
-  min-width: 35px;
-  border: 1px solid var(--rule);
-}
-.cart-line .fine {
-  overflow-wrap: anywhere;
-}
 .summary-line,
 .summary-total {
   display: flex;
@@ -1304,10 +1216,6 @@ progress {
 .summary-total {
   border-top: 1px solid var(--rule);
   margin-top: 3px;
-}
-.checkout-layout aside .text-link {
-  display: flex;
-  margin-top: 13px;
 }
 .confirmation {
   text-align: center;
@@ -1355,11 +1263,6 @@ progress {
     transform: translate(34px, 350px) rotate(300deg);
     opacity: 0;
   }
-}
-.order-ref {
-  overflow-wrap: anywhere;
-  font-weight: 700;
-  margin-top: 12px;
 }
 .admin-login {
   max-width: 530px;
@@ -1506,8 +1409,7 @@ progress {
     width: 40px;
     height: 40px;
   }
-  .nav-search,
-  .nav-wishlist {
+  .nav-search {
     display: none;
   }
 
@@ -1559,18 +1461,6 @@ progress {
   .product-actions .text-link {
     font-size: 0.74rem;
   }
-  .card-heart {
-    min-width: 36px;
-    min-height: 36px;
-    right: 5px;
-    top: 5px;
-  }
-  .card-add {
-    min-width: 36px;
-    min-height: 36px;
-    right: 5px;
-    bottom: 5px;
-  }
   .demo-pill {
     top: 8px;
     left: 6px;
@@ -1582,12 +1472,6 @@ progress {
   .quick-view img {
     width: 100%;
     max-height: 32vh;
-  }
-  .cart-line {
-    grid-template-columns: 59px minmax(0, 1fr);
-  }
-  .cart-line > strong {
-    grid-column: 2;
   }
   .admin-fields {
     grid-template-columns: 1fr;

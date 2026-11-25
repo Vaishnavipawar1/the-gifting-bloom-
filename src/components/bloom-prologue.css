@@ -596,10 +596,11 @@
 @media (max-width: 700px) {
   .bloom-prologue {
     --actor-width: min(80vw, 42svh);
+    --phone-camera-width: calc(min(42svh, 84vw, 25rem) / 0.1195);
   }
   .prologue-camera {
     left: calc(50% + (1 - var(--phone-zoom, 0)) * 14vw);
-    top: calc(50% + (1 - var(--phone-zoom, 0)) * 10svh);
+    top: calc(54.5% + (1 - var(--phone-zoom, 0)) * 5.5svh);
   }
   .prologue-caption {
     top: 12%;
@@ -620,5 +621,38 @@
   }
   .story-gallery-reveal {
     bottom: 5%;
+  }
+  .story-gallery-reveal a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .prologue-confirmation > span:last-child {
+    font-size: 5.5cqw;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 650px) and (orientation: portrait) {
+  .bloom-story .intro-bouquets {
+    inset-block-end: 31%;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .bloom-prologue {
+    --phone-camera-width: calc(min(45svh, 25rem) / 0.1195);
+  }
+  .prologue-caption {
+    top: 39%;
+    left: 8%;
+    width: 37%;
+    text-align: start;
+  }
+  .prologue-caption h1,
+  .prologue-smile-caption p {
+    font-size: clamp(1.65rem, 4.1vw, 2.6rem);
+  }
+  .story-gallery-reveal {
+    bottom: 4%;
   }
 }

@@ -259,15 +259,25 @@ function Scene({ playhead, onReady }: { playhead: Playhead; onReady: () => void 
     const ortho = camera as THREE.OrthographicCamera;
     const ratio = size.width / Math.max(1, size.height);
     const closeUp = ease(t, 4.34, 4.91) * (1 - ease(t, 5.32, 5.98));
+    const portrait = 1 - ease(ratio, 0.7, 0.96);
+    const meeting = ease(t, 2.8, 3.4);
+    const pairWidth = Math.max(3.52, pose.girlX - pose.boyX + 1.34);
+    const portraitWidth = THREE.MathUtils.lerp(2.52, pairWidth, meeting);
+    const frameWidth = THREE.MathUtils.lerp(4.24 - 0.64 * closeUp, portraitWidth, portrait);
     const vertical =
-      Math.max(3.8 - 0.48 * closeUp, (4.24 - 0.64 * closeUp) / Math.max(0.1, ratio)) +
-      0.28 * ease(t, 5.85, 6.8);
+      Math.max(3.8 - 0.48 * closeUp, frameWidth / Math.max(0.1, ratio)) + 0.28 * ease(t, 5.85, 6.8);
     ortho.top = vertical / 2;
     ortho.bottom = -vertical / 2;
     ortho.left = (-vertical * ratio) / 2;
     ortho.right = (vertical * ratio) / 2;
-    const pan =
+    const widePan =
       -0.43 * ease(t, 1.23, 2.38) + 0.59 * ease(t, 2.73, 3.96) - 0.16 * ease(t, 4.14, 5.55);
+    const portraitPan = THREE.MathUtils.lerp(
+      pose.boyX + 0.22,
+      (pose.boyX + pose.girlX) / 2 + 0.04,
+      meeting,
+    );
+    const pan = THREE.MathUtils.lerp(widePan, portraitPan, portrait);
     ortho.position.set(pan, 2.05 + 0.78 * (1 - ease(t, 0.24, 1.46)), 8);
     ortho.lookAt(pan, 1.41 + 0.18 * closeUp, 0.04);
     ortho.updateProjectionMatrix();

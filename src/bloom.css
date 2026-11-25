@@ -1440,6 +1440,13 @@ progress {
   .filter-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .single-page :is(input:not([type="range"]), select, textarea) {
+    min-width: 0;
+    font-size: 16px;
+  }
+  .shop-tabs :is(a, button) {
+    min-height: 44px;
+  }
   .admin-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1475,6 +1482,11 @@ progress {
   }
   .admin-fields {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 360px) {
+  .single-page .filter-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (prefers-reduced-motion: reduce) {

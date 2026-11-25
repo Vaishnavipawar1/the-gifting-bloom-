@@ -1,0 +1,624 @@
+.bloom-prologue {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  opacity: calc(1 - var(--prologue-end, 0));
+  pointer-events: none;
+  --actor-width: min(57svh, 68vw, 34rem);
+  --phone-left: 84.1%;
+  --phone-top: 32.6%;
+  --phone-width: 11.95%;
+  --phone-camera-width: calc(min(39svh, 78vw, 25rem) / 0.1195);
+}
+
+.prologue-phone-shot,
+.prologue-delivery {
+  position: absolute;
+  inset: 0;
+}
+
+.prologue-phone-shot {
+  background: radial-gradient(ellipse at 64% 48%, #fff1df38, #fff7ec13 48%, #9a53572b);
+}
+
+.prologue-camera {
+  position: absolute;
+  left: calc(50% + (1 - var(--phone-zoom, 0)) * min(21vw, 16rem));
+  top: calc(50% + (1 - var(--phone-zoom, 0)) * 3svh);
+  width: calc(
+    (1 - var(--phone-zoom, 0)) * var(--actor-width) + var(--phone-zoom, 0) *
+      var(--phone-camera-width)
+  );
+}
+
+.prologue-actor {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 585 / 887;
+}
+
+.prologue-actor > img {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 303.25%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+}
+
+.prologue-browsing {
+  transform: translate(calc(-1 * var(--phone-left)), calc(-1 * var(--phone-top)));
+  transform-origin: var(--phone-left) var(--phone-top);
+  animation: prologue-breathe 5s ease-in-out infinite;
+}
+
+.prologue-browsing > img {
+  left: -15.38%;
+  clip-path: inset(0 50% 0 0);
+}
+
+.prologue-browsing > .prologue-thumb {
+  z-index: 1;
+  clip-path: polygon(
+    33.6% 36.8%,
+    34.1% 36%,
+    35.1% 35.5%,
+    35.7% 35.9%,
+    35.8% 37.2%,
+    35.1% 37.6%,
+    34.3% 38.3%,
+    33.7% 38.3%
+  );
+  transform-origin: 35.6% 36.3%;
+  transform: rotate(calc(5deg * var(--screen-tap, 0) + 4deg * var(--order-tap, 0)));
+  opacity: calc(var(--phone-ui, 0.92) * (1 - var(--phone-zoom, 0)));
+}
+
+.prologue-blink {
+  position: absolute;
+  z-index: 1;
+  top: 17.3%;
+  left: 57.7%;
+  width: 3.8%;
+  height: 1.85%;
+  border-bottom: 1px solid #61382f;
+  border-radius: 70% 35% 60% 50%;
+  background: #e6aa7d;
+  transform: rotate(19deg) scaleY(0);
+  transform-origin: center top;
+  animation: prologue-blink 6.2s ease infinite;
+}
+
+@keyframes prologue-blink {
+  0%,
+  47%,
+  50%,
+  100% {
+    transform: rotate(19deg) scaleY(0);
+  }
+  48.5% {
+    transform: rotate(19deg) scaleY(1);
+  }
+}
+
+@keyframes prologue-breathe {
+  0%,
+  100% {
+    scale: 1 1;
+  }
+  50% {
+    scale: 1 1.009;
+  }
+}
+
+.prologue-phone {
+  position: absolute;
+  top: var(--phone-top);
+  left: var(--phone-left);
+  width: var(--phone-width);
+  aspect-ratio: 0.515;
+  translate: -50% -50%;
+  border-radius: 13% / 6%;
+  background: linear-gradient(130deg, #777175, #211c23 24%, #151217 75%, #69606a);
+  box-shadow:
+    0.3rem 0.7rem 1.8rem #33162552,
+    inset 0 0 0 1px #9d868a;
+  opacity: var(--phone-ui, 0.92);
+  container-type: inline-size;
+}
+
+.prologue-screen {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 2.3% 4.2%;
+  overflow: hidden;
+  border-radius: 11% / 5.5%;
+  color: #4d293a;
+  background: #fff9f4;
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+.prologue-screen::after {
+  position: absolute;
+  z-index: 2;
+  top: 1.8%;
+  left: 40%;
+  width: 20%;
+  height: 2.1%;
+  border-radius: 15px;
+  background: #242028;
+  content: "";
+}
+
+.prologue-phone-bar {
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11cqw 6cqw 3.6cqw;
+  background: #fff9f4;
+  border-bottom: 1px solid #eddad7;
+  font-size: 5cqw;
+  font-weight: 700;
+}
+
+.prologue-phone-bar span + span {
+  color: #855168;
+  font-size: 3.25cqw;
+  font-weight: 600;
+}
+
+.prologue-phone-panel {
+  position: absolute;
+  inset: 22cqw 0 0;
+  overflow: hidden;
+  background: #fff9f4;
+}
+
+.prologue-profile {
+  opacity: var(--phone-profile, 1);
+}
+
+.prologue-profile-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4cqw;
+  padding: 5cqw 6cqw;
+  font-size: 5cqw;
+  background: #fff9f4;
+}
+
+.prologue-profile-header div {
+  display: grid;
+  gap: 0.7cqw;
+}
+
+.prologue-profile-header div span {
+  color: #855168;
+  font-size: 3.8cqw;
+}
+
+.prologue-avatar {
+  display: grid;
+  place-items: center;
+  width: 15cqw;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+}
+
+.prologue-avatar .bloom-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.prologue-feed-card > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prologue-feed {
+  display: grid;
+  gap: 4cqw;
+  padding: 0 6cqw;
+}
+
+.prologue-feed-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 73cqw;
+  overflow: hidden;
+  border: 1px solid #edcbce;
+  border-radius: 4cqw;
+  background: #fbe8db;
+}
+
+.prologue-feed-card > img {
+  min-height: 0;
+}
+
+.prologue-feed-card > span:last-of-type {
+  position: relative;
+  padding: 3cqw 4cqw;
+  background: #fffaf4;
+  font-size: 4cqw;
+  font-weight: 600;
+}
+
+.prologue-feed-bouquet {
+  height: 108cqw;
+  border-color: rgb(173 91 116 / var(--bouquet-focus, 0));
+  background: radial-gradient(ellipse, #fff7e9, #f7dccd);
+}
+
+.prologue-bouquet-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 856 / 1180;
+  overflow: hidden;
+}
+
+.prologue-bouquet-art > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 146.5%;
+  max-width: none;
+  height: auto;
+}
+
+.prologue-feed-bouquet .prologue-bouquet-art {
+  width: 66cqw;
+  place-self: center;
+}
+
+.prologue-tap {
+  position: absolute;
+  top: 53%;
+  left: 55%;
+  width: 13cqw;
+  aspect-ratio: 1;
+  border: 0.7cqw solid #fff6ec;
+  border-radius: 50%;
+  background: #a8516a5c;
+  opacity: var(--screen-tap, 0);
+  scale: calc(0.7 + 0.55 * var(--screen-tap, 0));
+}
+
+.prologue-product,
+.prologue-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4cqw;
+  padding: 6cqw;
+  text-align: center;
+  font-size: 4.5cqw;
+}
+
+.prologue-product {
+  opacity: var(--phone-detail, 0);
+  transform: translateX(calc(13% * (1 - var(--phone-detail, 0))));
+  background: radial-gradient(ellipse at 50% 40%, #ffe8c9, #fff8f1 68%);
+}
+
+.prologue-product > .prologue-bouquet-art {
+  width: 65cqw;
+}
+.prologue-product-photo {
+  display: block;
+  width: 71cqw;
+  height: 89cqw;
+  overflow: hidden;
+  border-radius: 4cqw;
+}
+.prologue-product-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.prologue-product strong {
+  font-size: 7cqw;
+}
+
+.prologue-order-button {
+  display: block;
+  width: 90%;
+  padding: 3.7cqw;
+  border-radius: 12cqw;
+  color: white;
+  background: #8a3e59;
+  box-shadow: 0 0 0 calc(var(--order-tap, 0) * 2cqw) #c98c9b6e;
+  scale: calc(1 - 0.07 * var(--order-tap, 0));
+}
+
+.prologue-confirmation {
+  opacity: var(--phone-confirmation, 0);
+  background: radial-gradient(ellipse at 50% 40%, #ffedcf, #fff6f0 71%);
+}
+
+.prologue-confirmation strong {
+  max-width: 67cqw;
+  font-family: Georgia, serif;
+  font-size: 11cqw;
+  line-height: 1.05;
+}
+
+.prologue-order-icon {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: end;
+  color: #9c4c68;
+  transform: translateY(calc(10cqw * (1 - var(--phone-confirmation, 0))));
+}
+
+.prologue-order-icon svg {
+  width: 14cqw;
+  height: 14cqw;
+}
+.prologue-order-icon svg + svg {
+  width: 6cqw;
+  height: 6cqw;
+  fill: #e59a9f;
+}
+.prologue-confirmation > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+}
+.prologue-confirmation > span:last-child svg {
+  width: 4cqw;
+  height: 4cqw;
+}
+
+.prologue-caption {
+  position: absolute;
+  left: 10%;
+  top: 43%;
+  width: min(36vw, 35rem);
+  color: #542735;
+  text-wrap: balance;
+}
+
+.prologue-opening-caption {
+  opacity: var(--opening-caption, 1);
+}
+.prologue-caption h1,
+.prologue-smile-caption p,
+.story-love-caption,
+.story-shop-reveal p {
+  font-family: Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+
+.prologue-caption h1 {
+  margin: 0 0 0.7rem;
+  font-size: clamp(2.1rem, 4.6vw, 4.8rem);
+  line-height: 0.99;
+}
+
+.prologue-caption p {
+  margin: 0;
+  font-size: clamp(0.83rem, 1.28vw, 1.13rem);
+}
+.prologue-smile-caption {
+  opacity: var(--gift-caption, 0);
+}
+.prologue-smile-caption p {
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1.04;
+}
+
+.prologue-delivery {
+  background: #fbe3cc;
+  opacity: var(--delivery-shot, 0);
+}
+
+.prologue-entrance {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prologue-receiving {
+  position: absolute;
+  left: 64%;
+  bottom: -7%;
+  width: min(53svh, 74vw, 38rem);
+  aspect-ratio: 585 / 887;
+  transform: translateX(-50%) scale(calc(1 + 0.065 * var(--gift-lift, 0)));
+  transform-origin: 54% 84%;
+}
+
+.prologue-smile {
+  overflow: hidden;
+  animation: prologue-breathe 5s ease-in-out infinite;
+}
+
+.prologue-smile > img {
+  left: -173.5%;
+}
+.prologue-reaction-body {
+  clip-path: inset(27.5% 0 0 0);
+}
+.prologue-reaction-head {
+  clip-path: inset(0 0 69% 0);
+  transform-origin: 71% 28.7%;
+  transform: rotate(calc(2.3deg * var(--reaction-nod, 0)));
+}
+
+.prologue-parcel {
+  position: absolute;
+  left: 65%;
+  top: 62%;
+  width: 39%;
+  aspect-ratio: 1.8;
+  perspective: 420px;
+  opacity: calc(var(--parcel-arrival, 0) * (1 - var(--parcel-away, 0)));
+  transform: translate(
+      calc(-50% + 155% * (1 - var(--parcel-arrival, 0))),
+      calc(-24% + 51% * var(--parcel-away, 0))
+    )
+    rotate(calc(6deg * (1 - var(--parcel-arrival, 0))));
+}
+
+.prologue-parcel-front,
+.prologue-parcel-inside,
+.prologue-parcel-lid {
+  position: absolute;
+  inset: 0;
+}
+
+.prologue-parcel-front {
+  top: 26%;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c68b80;
+  border-radius: 0 0 7px 7px;
+  background: linear-gradient(165deg, #fde9dc, #e8b5ac);
+  box-shadow: 0 12px 34px #57253530;
+}
+
+.prologue-parcel-front .bloom-logo {
+  width: 86%;
+  height: 84%;
+  min-height: 0;
+  object-fit: contain;
+}
+.prologue-parcel-inside {
+  bottom: 62%;
+  background: #ac7968;
+}
+
+.prologue-parcel-lid {
+  bottom: 70%;
+  border: 1px solid #c58c84;
+  border-radius: 6px 6px 1px 1px;
+  background: linear-gradient(105deg, #fcecdf, #f1cbc0);
+  transform-origin: center top;
+  transform: rotateX(calc(105deg * var(--parcel-lid, 0)))
+    translateY(calc(-55% * var(--parcel-lid, 0)));
+}
+
+.prologue-delivered-bouquet {
+  position: absolute;
+  left: 55%;
+  top: 71%;
+  width: 39%;
+  opacity: var(--gift-lift, 0);
+  transform: translate(-50%, calc(-91% * var(--gift-lift, 0)))
+    rotate(calc(-8deg * var(--gift-lift, 0)));
+}
+
+.story-love-caption {
+  position: absolute;
+  z-index: 2;
+  inset: auto 10% 7%;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  opacity: var(--love-caption, 0);
+  pointer-events: none;
+  text-shadow:
+    0 1px 10px #fff8f3,
+    0 0 20px #fff8f3;
+}
+
+.story-shop-reveal {
+  position: absolute;
+  z-index: 2;
+  inset: auto 5% 5%;
+  visibility: hidden;
+  text-align: center;
+  opacity: var(--bouquet-reveal, 0);
+}
+
+[data-revealed] > .story-shop-reveal {
+  visibility: visible;
+}
+.story-shop-reveal p {
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.6rem, 3.2vw, 3.3rem);
+}
+.story-shop-reveal > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.story-shop-reveal a {
+  border: 1px solid #86455c;
+  border-radius: 100px;
+  padding: 0.62rem 1.12rem;
+  background: #fff7f1;
+  font-size: clamp(0.75rem, 1.1vw, 0.91rem);
+  font-weight: 600;
+}
+
+.story-shop-reveal a:first-child {
+  color: white;
+  background: #86455c;
+}
+.bloom-story .intro-bouquets {
+  inset: 6% 5% 25%;
+}
+.bloom-story .intro-scroll-cue {
+  display: grid;
+  justify-items: center;
+  gap: 0.18rem;
+  padding: 0.4rem 0.75rem 0.25rem;
+  border: 1px solid #c18d9b79;
+  border-radius: 2rem;
+  color: #683849;
+  background: #fff9eff0;
+  font-size: 0.72rem;
+}
+.intro-scroll-cue svg {
+  animation: prologue-scroll-cue 1.8s ease-in-out infinite;
+}
+@keyframes prologue-scroll-cue {
+  50% {
+    transform: translateY(0.22rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .bloom-prologue {
+    --actor-width: min(80vw, 42svh);
+  }
+  .prologue-camera {
+    left: calc(50% + (1 - var(--phone-zoom, 0)) * 14vw);
+    top: calc(50% + (1 - var(--phone-zoom, 0)) * 10svh);
+  }
+  .prologue-caption {
+    top: 12%;
+    left: 10%;
+    width: 80%;
+    text-align: center;
+  }
+  .prologue-caption h1 {
+    font-size: clamp(1.9rem, 8vw, 3.5rem);
+  }
+  .prologue-receiving {
+    left: 50%;
+    bottom: -3%;
+    width: min(89vw, 49svh);
+  }
+  .prologue-smile-caption p {
+    font-size: clamp(1.8rem, 7vw, 3rem);
+  }
+  .story-shop-reveal {
+    bottom: 5%;
+  }
+}

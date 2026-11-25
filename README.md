@@ -13,7 +13,11 @@ npm test
 npm run build
 ```
 
-The default local address is http://localhost:5173. The Vite build emits Nitro deployment output in `.output` using the Cloudflare preset. Run `npm run dev` for the full app and its server endpoints. Set `NITRO_PRESET=node-server` at build time for a Node deployment. The built-in catalogue includes four labelled concept products.
+The default local address is http://localhost:5173. Run `npm run dev` for the full app and its server endpoints. Local production builds use the Cloudflare preset by default. Set `NITRO_PRESET=node-server` at build time for a Node deployment. The built-in catalogue includes four labelled concept products.
+
+## Deploy on Vercel
+
+`vercel.json` configures Nitro to build the site and its API functions into `.vercel/output`. Leave the Vercel project's Output Directory override off so it can use that build output. Configure the Lovable Cloud environment variables listed below in the Vercel project for live enquiries and owner sign-in.
 
 ## Connect the website in Lovable
 

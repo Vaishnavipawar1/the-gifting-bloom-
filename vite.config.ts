@@ -8,8 +8,7 @@ export default defineConfig(({ command }) => ({
   plugins: [
     nitro({
       serverDir: "./server",
-      preset:
-        process.env["NITRO_PRESET"] ?? (command === "serve" ? "node-server" : "cloudflare-module"),
+      defaultPreset: command === "serve" ? "node-server" : "cloudflare-module",
     }),
     react(),
     tailwindcss(),
